@@ -1,0 +1,54 @@
+type User {
+  id: Int!
+  username: String!
+  email: String!
+  password: String!	
+  phone: Int!
+  address: String!
+}
+
+type UserSettings {
+  userID: Int!
+  receiveEmails: Boolean!
+  receiveNotifications: Boolean!
+}
+
+type LoginReturn {
+  user: User!
+  token: String!
+}
+
+type RegisterReturn {
+  user: User!
+  message: String!
+}
+
+input RegisterInput {
+  username: String!
+  email: String!
+  password: String!	
+  phone: Int!
+  address: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input UserSettingsInput {
+  userID: Int!
+  receiveEmails: Boolean!
+  receiveNotifications: Boolean!
+}
+
+type Query {
+  users: [User]!
+  user(email: String!): User
+}
+
+type Mutation {
+  register(registerInput: RegisterInput!): RegisterReturn!
+  login(loginInput: LoginInput!): LoginReturn!
+  createUserSettings(userSettingsInput: UserSettingsInput!): UserSettings!
+}
