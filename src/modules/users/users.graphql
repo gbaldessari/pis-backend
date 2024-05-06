@@ -23,6 +23,24 @@ type RegisterReturn {
   message: String!
 }
 
+type ResetPasswordReturn {
+  message: String!
+  data: User!
+}
+
+type MailReturn {
+  message: String!
+}
+
+input UserInput {
+  id: Int!
+  username: String!
+  email: String!
+  password: String!	
+  phone: Int!
+  address: String!
+}
+
 input RegisterInput {
   username: String!
   email: String!
@@ -42,13 +60,31 @@ input UserSettingsInput {
   receiveNotifications: Boolean!
 }
 
+input EditUserInput {
+  username: String
+  email: String
+  password: String
+  phone: Int
+  address: String
+}
+
+input ResetPasswordInput {
+  email: String!
+  reset_token: String!
+  password: String!
+}
+
 type Query {
   users: [User]!
   user(email: String!): User
+  sendUserRecovery(user: UserInput!): MailReturn!
 }
 
 type Mutation {
   register(registerInput: RegisterInput!): RegisterReturn!
   login(loginInput: LoginInput!): LoginReturn!
   createUserSettings(userSettingsInput: UserSettingsInput!): UserSettings!
+  editUser(email: String!, editUserInput: EditUserInput!): User!
+  requestPasswordReset(email: String!): ResetPasswordReturn!
+  resetPassword(resetPasswordInput: ResetPasswordInput!): ResetPasswordReturn! 
 }

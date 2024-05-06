@@ -8,6 +8,7 @@ import { UserSetting } from "src/modules/users/entities/user-settings.entity";
 import { UserSettingsResolver } from "src/modules/users/user-settings.resolver";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
+import { EmailService } from "src/modules/users/email/email.module";
 
 @Module({
   imports: [
@@ -16,11 +17,13 @@ import { ConfigService } from "@nestjs/config";
         useFactory: (configService: ConfigService) => ({
           secret: configService.get<string>('JWT_SECRET'),
           signOptions: { expiresIn: '12h' },
+          global: true
         }),
         inject: [ConfigService],
-      }),
+    }),
   ],
   providers: [
+    { provide: 'MAIL_SERVICE', useClass: EmailService },
     UserResolver, 
     UserService, 
     UserSettingsService,

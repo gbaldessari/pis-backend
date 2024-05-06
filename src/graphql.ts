@@ -16,6 +16,15 @@ export interface UpdateRoleInput {
     id: number;
 }
 
+export interface UserInput {
+    id: number;
+    username: string;
+    email: string;
+    password: string;
+    phone: number;
+    address: string;
+}
+
 export interface RegisterInput {
     username: string;
     email: string;
@@ -35,6 +44,20 @@ export interface UserSettingsInput {
     receiveNotifications: boolean;
 }
 
+export interface EditUserInput {
+    username?: Nullable<string>;
+    email?: Nullable<string>;
+    password?: Nullable<string>;
+    phone?: Nullable<number>;
+    address?: Nullable<string>;
+}
+
+export interface ResetPasswordInput {
+    email: string;
+    reset_token: string;
+    password: string;
+}
+
 export interface Role {
     exampleField?: Nullable<number>;
 }
@@ -44,6 +67,7 @@ export interface IQuery {
     role(id: number): Nullable<Role> | Promise<Nullable<Role>>;
     users(): Nullable<User>[] | Promise<Nullable<User>[]>;
     user(email: string): Nullable<User> | Promise<Nullable<User>>;
+    sendUserRecovery(user: UserInput): MailReturn | Promise<MailReturn>;
 }
 
 export interface IMutation {
@@ -53,6 +77,9 @@ export interface IMutation {
     register(registerInput: RegisterInput): RegisterReturn | Promise<RegisterReturn>;
     login(loginInput: LoginInput): LoginReturn | Promise<LoginReturn>;
     createUserSettings(userSettingsInput: UserSettingsInput): UserSettings | Promise<UserSettings>;
+    editUser(email: string, editUserInput: EditUserInput): User | Promise<User>;
+    requestPasswordReset(email: string): ResetPasswordReturn | Promise<ResetPasswordReturn>;
+    resetPassword(resetPasswordInput: ResetPasswordInput): ResetPasswordReturn | Promise<ResetPasswordReturn>;
 }
 
 export interface User {
@@ -77,6 +104,15 @@ export interface LoginReturn {
 
 export interface RegisterReturn {
     user: User;
+    message: string;
+}
+
+export interface ResetPasswordReturn {
+    message: string;
+    data: User;
+}
+
+export interface MailReturn {
     message: string;
 }
 

@@ -36,6 +36,10 @@ export class User {
     @Field()
     address:string;
 
+    @Column({nullable: true})
+    @Field()
+    resetPasswordToken:string;
+
     @OneToOne(() => UserSetting)
     @JoinColumn()
     @Field({nullable: true})
