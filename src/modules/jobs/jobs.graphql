@@ -1,0 +1,64 @@
+type Job {
+  id: Int!
+  jobName: String!
+  description: String!
+  averageRate: Int!
+  idCategory: Int!
+  idProfessional: Int!
+  requestsCount: Int!
+}
+
+type Category {
+  id: Int!
+  categoryName: String!
+}
+
+type CreateJobReturn {
+  job: Job!
+  message: String!
+}
+
+type UpdateJobReturn {
+  job: Job!
+  message: String!
+}
+
+type RemoveJobReturn {
+  message: String!
+}
+
+type CreateCategoryReturn {
+  category: Category!
+  message: String!
+}
+
+input CreateJobInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateCategoryinput {
+  name: String!
+}
+
+input UpdateJobInput {
+  jobName: String
+  description: String
+  idCategory: Int
+  idProfessional: Int
+}
+
+type Query {
+  jobs: [Job]!
+  jobByName(name: String!): Job
+  jobByCategory(category: String!): Job
+  categoryById(id: Int!): Category
+  categoryByName(name: String!): Category
+}
+
+type Mutation {
+  createJob(createJobInput: CreateJobInput!): CreateJobReturn!
+  updateJob(updateJobInput: UpdateJobInput!): UpdateJobReturn!
+  removeJob(id: Int!): RemoveJobReturn!
+  createCategory(createCategoryInput: CreateCategoryinput!): CreateCategoryReturn!
+}

@@ -4,7 +4,6 @@ import {
     Query, 
     Resolver 
 } from "@nestjs/graphql";
-import { User } from "src/modules/users/entities/user.entity";
 import { RegisterInput } from "./dto/register-input";
 import { UserService } from "./users.service";
 import { LoginInput } from "./dto/login-input";
@@ -18,9 +17,14 @@ export class UserResolver {
         private userService: UserService,
     ) {}
 
-    @Query('user')
+    @Query('userByEmail')
     getUserByEmail(@Args('email') email: string) {
         return this.userService.getUserByEmail(email);
+    }
+
+    @Query('userById')
+    getUserById(@Args('id') id:number){
+        return this.userService.getUserById(id);
     }
 
     @Query('users')

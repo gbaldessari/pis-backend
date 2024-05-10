@@ -3,8 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { GraphqlModule } from 'src/graphql/graphql.module';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
-import { RolesModule } from './modules/roles/roles.module';
 import { EmailModule } from './modules/users/email/email.module';
+import { JobsModule } from './modules/jobs/jobs.module';
+import { MeetsModule } from './modules/meets/meets.module';
 
 @Module({
   imports: [
@@ -15,8 +16,9 @@ import { EmailModule } from './modules/users/email/email.module';
     DatabaseModule,
     UsersModule,
     GraphqlModule,
-    RolesModule,
     EmailModule,
+    JobsModule,
+    MeetsModule,
   ],
   controllers: [],
   providers: [],

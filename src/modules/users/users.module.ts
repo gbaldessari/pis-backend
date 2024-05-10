@@ -29,5 +29,6 @@ import { EmailService } from "src/modules/users/email/email.module";
     UserSettingsService,
     UserSettingsResolver
   ],
+  exports: [UserService, UserSettingsService]
 })
 export class UsersModule {}

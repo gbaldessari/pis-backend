@@ -1,0 +1,24 @@
+type Meet {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateMeetInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateMeetInput {
+  id: Int!
+}
+
+type Query {
+  meets: [Meet]!
+  meet(id: Int!): Meet
+}
+
+type Mutation {
+  createMeet(createMeetInput: CreateMeetInput!): Meet!
+  updateMeet(updateMeetInput: UpdateMeetInput!): Meet!
+  removeMeet(id: Int!): Meet
+}

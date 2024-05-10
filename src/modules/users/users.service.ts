@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { EditUserInput } from './dto/edit-user-input';
 import { EmailService } from './email/email.service';
 import { ResetPasswordInput } from './dto/reset-password-input';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class UserService {
@@ -19,10 +20,14 @@ export class UserService {
     private connection: Connection,
     private jwtService: JwtService,
     private mailService: EmailService,
-  ) { }
+  ) {}
 
-  getUserByEmail(email: string) {
-    return this.userRepository.findOneBy({ email });
+  async getUserByEmail(email: string) {
+    return await this.userRepository.findOneBy({ email });
+  }
+
+  async getUserById(id:number){
+    return await this.userRepository.findOneBy({id});
   }
 
   async getUsers() {
@@ -44,7 +49,7 @@ export class UserService {
 
       return { user: findUser, token: access_token };
     } catch (error) {
-      throw new Error(String(error));
+      throw new Error(String(error) + "INTERNAL ERROR");
     }
   }
 
@@ -90,45 +95,52 @@ export class UserService {
   }
 
   async requestResetPassword(email: string) {
-    const findUser: User = await this.getUserByEmail(email);
-    if (!findUser) throw new Error('Usuario no encontrado');
+    try {
+      const findUser: User = await this.getUserByEmail(email);
+      if (!findUser) throw new Error('Usuario no encontrado');
 
-    const payload = { email: findUser.email, username: findUser.username };
-    const resetToken = this.jwtService.sign(payload);
+      const resetToken = randomBytes(20).toString('hex')
+      findUser.resetPasswordToken = resetToken;
+      findUser.resetPasswordExpires = new Date(Date.now() + 3600000);
 
-    const userUpdate: User = await this.updateByEmail(
-      email, { resetPasswordToken: resetToken }
-    );
-
-    this.mailService.sendUserRecovery(userUpdate);
-    console.log('Correo enviado');
-    return {
-      message: 'Se ha enviado un codigo a tu correo',
-      data: userUpdate,
-    };
+      this.userRepository.save(findUser);
+      this.mailService.sendUserRecovery(findUser);
+      console.log('Correo enviado');
+      return {
+        message: 'Se ha enviado un codigo a tu correo',
+        data: findUser,
+      };
+    } catch (error) {
+      throw new Error(String(error) + "INTERNAL ERROR");
+    }
   }
 
   async resetPassword(resetPasswordInput: ResetPasswordInput) {
-    const { email, resetPasswordToken, password } = resetPasswordInput;
-    const findUser = await this.getUserByEmail(email);
+    try{
+      const { email, resetPasswordToken, password } = resetPasswordInput;
+      const findUser = await this.getUserByEmail(email);
 
-    if (!findUser) throw new Error('Usuario no encontrado');
+      if (!findUser) throw new Error('Usuario no encontrado');
 
-    if (findUser.resetPasswordToken == resetPasswordToken) {
-      const hashPassword = await hash(password, 10);
-      this.updateByEmail(email, {
-        resetPasswordToken: null,
-        password: hashPassword,
-      });
+
+      if (findUser.resetPasswordToken == resetPasswordToken) {
+        const hashPassword = await hash(password, 10);
+        this.updateByEmail(email, {
+          resetPasswordToken: null,
+          password: hashPassword,
+        });
+        return {
+          message: 'Contrasena cambiada exitosamente',
+          data: findUser,
+        };
+      }
       return {
-        message: 'Contrasena cambiada exitosamente',
+        message: 'Codigo incorrecto',
         data: findUser,
       };
+    } catch (error) {
+      throw new Error(String(error) + "INTERNAL ERROR");
     }
-    return {
-      message: 'Codigo incorrecto',
-      data: { error: 'el codigo que se ha ingresado no es correcto' },
-    };
   }
 
 }

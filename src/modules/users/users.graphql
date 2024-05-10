@@ -70,13 +70,14 @@ input EditUserInput {
 
 input ResetPasswordInput {
   email: String!
-  reset_token: String!
+  resetPasswordToken: String!
   password: String!
 }
 
 type Query {
   users: [User]!
-  user(email: String!): User
+  userByEmail(email: String!): User
+  userById(id: Int!): User
   sendUserRecovery(user: UserInput!): MailReturn!
 }
 

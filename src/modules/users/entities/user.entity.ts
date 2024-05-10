@@ -5,8 +5,10 @@ import {
     Column, 
     PrimaryGeneratedColumn, 
     OneToOne, 
-    JoinColumn 
+    JoinColumn, 
+    OneToMany
 } from "typeorm";
+import { Job } from "src/modules/jobs/entities/job.entity";
 
 @Entity({ name: "users" })
 @ObjectType()
@@ -39,6 +41,13 @@ export class User {
     @Column({nullable: true})
     @Field()
     resetPasswordToken:string;
+
+    @Column({nullable: true})
+    @Field()
+    resetPasswordExpires:Date;
+
+    @OneToMany(() => Job, job => job.idProfessional)
+    jobs: Job[];
 
     @OneToOne(() => UserSetting)
     @JoinColumn()

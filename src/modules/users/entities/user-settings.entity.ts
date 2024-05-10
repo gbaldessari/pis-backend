@@ -17,5 +17,4 @@ export class UserSetting {
     @Field({defaultValue: false, nullable: true})
     receiveNotifications: boolean;
 
-
 }
