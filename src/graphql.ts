@@ -9,7 +9,10 @@
 /* eslint-disable */
 
 export interface CreateJobInput {
-    exampleField?: Nullable<number>;
+    jobName: string;
+    description: string;
+    idCategory: number;
+    idProfessional: number;
 }
 
 export interface CreateCategoryinput {
@@ -78,9 +81,18 @@ export interface Job {
     jobName: string;
     description: string;
     averageRate: number;
-    idCategory: number;
-    idProfessional: number;
+    idCategory: Category;
+    idProfessional: User;
     requestsCount: number;
+}
+
+export interface User {
+    id: number;
+    username: string;
+    email: string;
+    password: string;
+    phone: number;
+    address: string;
 }
 
 export interface Category {
@@ -111,6 +123,7 @@ export interface IQuery {
     jobs(): Nullable<Job>[] | Promise<Nullable<Job>[]>;
     jobByName(name: string): Nullable<Job> | Promise<Nullable<Job>>;
     jobByCategory(category: string): Nullable<Job> | Promise<Nullable<Job>>;
+    categories(): Nullable<Category>[] | Promise<Nullable<Category>[]>;
     categoryById(id: number): Nullable<Category> | Promise<Nullable<Category>>;
     categoryByName(name: string): Nullable<Category> | Promise<Nullable<Category>>;
     meets(): Nullable<Meet>[] | Promise<Nullable<Meet>[]>;
@@ -139,15 +152,6 @@ export interface IMutation {
 
 export interface Meet {
     exampleField?: Nullable<number>;
-}
-
-export interface User {
-    id: number;
-    username: string;
-    email: string;
-    password: string;
-    phone: number;
-    address: string;
 }
 
 export interface UserSettings {

@@ -20,7 +20,8 @@ export class JobsService {
   ){}
 
   async getJobs() {
-    return await this.jobRepository.find();
+    const josb = await this.jobRepository.find();
+    return josb;
   }
 
   async getByName(jobName: string) {
@@ -32,20 +33,21 @@ export class JobsService {
 
     return await this.jobRepository.find({
       where: { 
-        idCategory: category.id
-      },
-      relations: ['category']
+        idCategory: category
+      }
     });
   }
 
   async createJob(createJobInput: CreateJobInput) {
     const existName = await this.getByName(createJobInput.jobName);
+    console.log(existName)
     const category = await this.categoryService.getById(createJobInput.idCategory);
-    const existCategory =  (await this.getByCategory(category.categoryName)).find(
-        existName => existName.jobName === createJobInput.jobName
-      );
+    console.log(category)
+    const existCategory = await (await this.getByCategory(category.categoryName)).find(job => job.jobName === createJobInput.jobName)
+    console.log(existCategory)
     const professional = await this.userService.getUserById(
       createJobInput.idProfessional);
+    console.log(professional)
 
     if(existName) throw new Error('Este nombre ya fue utilizado');
     if(!category) throw new Error('Categoria no existe');
@@ -53,13 +55,20 @@ export class JobsService {
     if(existCategory === existName) 
       throw new Error('Ya existe un servicio con este nombre en la categoría: '+
       category.categoryName);
-
+    
+    const jobInput = {
+      jobName: createJobInput.jobName,
+      description: createJobInput.description,
+      idCategory: category,
+      idProfessional: professional,
+    }
+    
     let job: Job;
 
     await this.connection.transaction(
       async (transactionalEntityManager: EntityManager): Promise<void> => {
         try {
-          job = this.jobRepository.create(createJobInput);
+          job = this.jobRepository.create(jobInput);
           await transactionalEntityManager.save(job);
         } catch (error: unknown) {
           throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString());
@@ -76,9 +85,11 @@ export class JobsService {
 
     const existName = await this.getByName(updateJobInput.jobName);
     const category = await this.categoryService.getById(updateJobInput.idCategory);
+
     const existCategory =  (await this.getByCategory(category.categoryName)).find(
         existName => existName.jobName === updateJobInput.jobName
       );
+
     const professional = await this.userService.getUserById(
       updateJobInput.idProfessional);
 
@@ -89,11 +100,14 @@ export class JobsService {
       throw new Error('Ya existe un servicio con este nombre en la categoría: '+
       category.categoryName);
 
-    const updateJob: Job = await this.jobRepository.save({
-      ...job,
-      ...updateJobInput
-    });
+    const updateInput = {
+      jobName: updateJobInput.jobName,
+      description: updateJobInput.description,
+      idCategory: category,
+      idProfessional: professional
+    }
 
+    const updateJob: Job = await this.jobRepository.save(updateInput);
     return {job: updateJob, message: "Servicio actualizado"};
   }
 

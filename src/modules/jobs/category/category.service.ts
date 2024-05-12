@@ -14,16 +14,22 @@ export class CategoryService {
         private connection: Connection,
     ) {}
 
+    async getCategories(){
+        return await this.categoryRepository.find();
+    }
+
     async getById(id:number){
-        return await this.categoryRepository.findOne({where: {id: id}});
+        return await this.categoryRepository.findOneBy({id});
     }
 
     async getByName(name:string){
-        return await this.categoryRepository.findOne({where: {categoryName: name}})
+        return await this.categoryRepository.findOneBy({categoryName: name})
     }
 
     async createCategory(createCategoryInput: CreateCategoryInput){
-        const exist = this.getByName(createCategoryInput.name)
+        const exist = await this.getByName(createCategoryInput.name)
+
+        console.log(exist)
 
         if(exist) throw new Error('Esta categoria ya existe')
         

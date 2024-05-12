@@ -30,15 +30,15 @@ export class Job {
     @Field()
     averageRate:number;
 
-    @ManyToOne(() => Category, category => category.id)
+    @ManyToOne(() => Category, category => category.jobs)
     @JoinColumn({ name: "idCategory" })
     @Field({nullable: false})
-    idCategory:number;
+    idCategory:Category;
 
-    @ManyToOne(() => User, user => user.id)
+    @ManyToOne(() => User, user => user.jobs)
     @JoinColumn({ name: "idProfessional" })
     @Field({nullable: false})
-    idProfessional:number;
+    idProfessional:User;
 
     @Column({default: 0, nullable: true})
     @Field()

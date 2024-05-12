@@ -8,6 +8,11 @@ export class CategoryResolver {
         private categoryService:CategoryService
     ) {}
 
+    @Query('categories')
+    getCategories() {
+        return this.categoryService.getCategories();
+    }
+
     @Query('categoryById')
     getById(@Args('id') id:number){
         return this.categoryService.getById(id);

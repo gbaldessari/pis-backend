@@ -3,9 +3,18 @@ type Job {
   jobName: String!
   description: String!
   averageRate: Int!
-  idCategory: Int!
-  idProfessional: Int!
+  idCategory: Category!
+  idProfessional: User!
   requestsCount: Int!
+}
+
+type User {
+  id: Int!
+  username: String!
+  email: String!
+  password: String!	
+  phone: Int!
+  address: String!
 }
 
 type Category {
@@ -33,8 +42,10 @@ type CreateCategoryReturn {
 }
 
 input CreateJobInput {
-  # Example field (placeholder)
-  exampleField: Int
+  jobName: String!
+  description: String!
+  idCategory: Int!
+  idProfessional: Int!
 }
 
 input CreateCategoryinput {
@@ -52,6 +63,7 @@ type Query {
   jobs: [Job]!
   jobByName(name: String!): Job
   jobByCategory(category: String!): Job
+  categories: [Category]!
   categoryById(id: Int!): Category
   categoryByName(name: String!): Category
 }
