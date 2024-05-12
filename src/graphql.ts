@@ -136,7 +136,7 @@ export interface IQuery {
 
 export interface IMutation {
     createJob(createJobInput: CreateJobInput): CreateJobReturn | Promise<CreateJobReturn>;
-    updateJob(updateJobInput: UpdateJobInput): UpdateJobReturn | Promise<UpdateJobReturn>;
+    updateJob(jobName: string, updateJobInput: UpdateJobInput): UpdateJobReturn | Promise<UpdateJobReturn>;
     removeJob(id: number): RemoveJobReturn | Promise<RemoveJobReturn>;
     createCategory(createCategoryInput: CreateCategoryinput): CreateCategoryReturn | Promise<CreateCategoryReturn>;
     createMeet(createMeetInput: CreateMeetInput): Meet | Promise<Meet>;

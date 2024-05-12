@@ -30,8 +30,8 @@ export class JobsResolver {
   }
 
   @Mutation('updateJob')
-  updateJob(@Args('updateJobInput') updateJobInput: UpdateJobInput) {
-    return this.jobsService.updateJob(updateJobInput.jobName, updateJobInput);
+  updateJob(@Args('jobName') jobName: string, @Args('updateJobInput') updateJobInput: UpdateJobInput) {
+    return this.jobsService.updateJob(jobName, updateJobInput);
   }
 
   @Mutation('removeJob')

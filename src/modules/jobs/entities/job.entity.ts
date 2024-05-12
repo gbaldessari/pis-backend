@@ -32,12 +32,12 @@ export class Job {
 
     @ManyToOne(() => Category, category => category.jobs)
     @JoinColumn({ name: "idCategory" })
-    @Field({nullable: false})
+    @Field(type => Category, {nullable: false})
     idCategory:Category;
 
     @ManyToOne(() => User, user => user.jobs)
     @JoinColumn({ name: "idProfessional" })
-    @Field({nullable: false})
+    @Field(type => User, {nullable: false})
     idProfessional:User;
 
     @Column({default: 0, nullable: true})

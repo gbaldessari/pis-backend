@@ -40,14 +40,10 @@ export class JobsService {
 
   async createJob(createJobInput: CreateJobInput) {
     const existName = await this.getByName(createJobInput.jobName);
-    console.log(existName)
     const category = await this.categoryService.getById(createJobInput.idCategory);
-    console.log(category)
     const existCategory = await (await this.getByCategory(category.categoryName)).find(job => job.jobName === createJobInput.jobName)
-    console.log(existCategory)
     const professional = await this.userService.getUserById(
       createJobInput.idProfessional);
-    console.log(professional)
 
     if(existName) throw new Error('Este nombre ya fue utilizado');
     if(!category) throw new Error('Categoria no existe');
@@ -62,9 +58,8 @@ export class JobsService {
       idCategory: category,
       idProfessional: professional,
     }
-    
-    let job: Job;
 
+    let job: Job;
     await this.connection.transaction(
       async (transactionalEntityManager: EntityManager): Promise<void> => {
         try {
@@ -101,14 +96,21 @@ export class JobsService {
       category.categoryName);
 
     const updateInput = {
-      jobName: updateJobInput.jobName,
-      description: updateJobInput.description,
-      idCategory: category,
-      idProfessional: professional
+      jobName: updateJobInput.jobName !== undefined ? 
+        updateJobInput.jobName : job.jobName,
+      description: updateJobInput.description !== undefined ? 
+        updateJobInput.description : job.description,
+      idCategory: updateJobInput.idCategory !== undefined ? 
+        category : job.idCategory,
+      idProfessional: updateJobInput.idProfessional !== undefined ? 
+        professional : job.idProfessional
     }
 
-    const updateJob: Job = await this.jobRepository.save(updateInput);
-    return {job: updateJob, message: "Servicio actualizado"};
+    console.log(jobName)
+    console.log(updateInput.jobName)
+
+    await this.jobRepository.update(job.id,updateInput);
+    return {job: job, message: "Servicio actualizado"};
   }
 
   async removeJob(id: number) {
@@ -116,7 +118,6 @@ export class JobsService {
     if (!job) throw new Error('Trabajo no encontrado');
 
     await this.jobRepository.remove(job);
-
     return {message: "Servicio eliminado"};
   }
 }

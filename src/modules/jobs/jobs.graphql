@@ -70,7 +70,7 @@ type Query {
 
 type Mutation {
   createJob(createJobInput: CreateJobInput!): CreateJobReturn!
-  updateJob(updateJobInput: UpdateJobInput!): UpdateJobReturn!
+  updateJob(jobName: String!, updateJobInput: UpdateJobInput!): UpdateJobReturn!
   removeJob(id: Int!): RemoveJobReturn!
   createCategory(createCategoryInput: CreateCategoryinput!): CreateCategoryReturn!
 }
