@@ -47,7 +47,7 @@ export class UserService {
       const payload = { email: findUser.email, username: findUser.username };
       const access_token = this.jwtService.sign(payload);
 
-      return { user: findUser, token: access_token };
+      return { email: findUser.email, token: access_token };
     } catch (error) {
       throw new Error(String(error) + "INTERNAL ERROR");
     }
@@ -141,6 +141,24 @@ export class UserService {
     } catch (error) {
       throw new Error(String(error) + "INTERNAL ERROR");
     }
+  }
+
+  async getUserMeetByDate(id: number, date: string) {
+    const user = await this.getUserById(id);
+    if (!user) throw new Error('Usuario no encontrado');
+
+    if(user.isProfessional) {
+      const existDate = user.professionalMeets.find((meet) => meet.meetDate === date);
+      const existTimeStart = user.professionalMeets.find((meet) => meet.startTime === date);
+
+      if (existDate && existTimeStart) return false;
+    } else {
+      const existDate = user.userMeets.find((meet) => meet.meetDate === date);
+      const existTimeStart = user.userMeets.find((meet) => meet.startTime === date);
+
+      if (existDate && existTimeStart) return false;
+    }
+    return true;
   }
 
 }

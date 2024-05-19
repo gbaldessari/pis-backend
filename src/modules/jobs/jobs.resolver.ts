@@ -24,6 +24,11 @@ export class JobsResolver {
     return this.jobsService.getByCategory(categoryName);
   }
 
+  @Query('jobById')
+  getById(@Args('id') id: number) {
+    return this.jobsService.getById(id);
+  }
+
   @Mutation('createJob')
   createJob(@Args('createJobInput') createJobInput: CreateJobInput) {
     return this.jobsService.createJob(createJobInput);

@@ -5,6 +5,7 @@ type User {
   password: String!	
   phone: Int!
   address: String!
+  isProfessional: Boolean!
 }
 
 type UserSettings {
@@ -14,7 +15,7 @@ type UserSettings {
 }
 
 type LoginReturn {
-  user: User!
+  email: String!
   token: String!
 }
 
@@ -47,6 +48,7 @@ input RegisterInput {
   password: String!	
   phone: Int!
   address: String!
+  isProfessional: Boolean
 }
 
 input LoginInput {
@@ -78,6 +80,7 @@ type Query {
   users: [User]!
   userByEmail(email: String!): User
   userById(id: Int!): User
+  userMeetByDate(id: Int!, date: String!): Boolean!
   sendUserRecovery(user: UserInput!): MailReturn!
 }
 

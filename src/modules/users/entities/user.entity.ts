@@ -9,6 +9,7 @@ import {
     OneToMany
 } from "typeorm";
 import { Job } from "src/modules/jobs/entities/job.entity";
+import { Meet } from "src/modules/meets/entities/meet.entity";
 
 @Entity({ name: "users" })
 @ObjectType()
@@ -46,6 +47,10 @@ export class User {
     @Field()
     resetPasswordExpires:Date;
 
+    @Column({default: false})
+    @Field()
+    isProfessional:boolean;
+
     @OneToMany(() => Job, job => job.idProfessional)
     jobs: Job[];
 
@@ -53,5 +58,11 @@ export class User {
     @JoinColumn()
     @Field({nullable: true})
     settings?: UserSetting;
+
+    @OneToMany(() => Meet, meet => meet.idProfessional)
+    professionalMeets: Meet[];
+
+    @OneToMany(() => Meet, meet => meet.idUser)
+    userMeets: Meet[];
 
 }

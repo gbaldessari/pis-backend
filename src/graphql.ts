@@ -49,6 +49,7 @@ export interface RegisterInput {
     password: string;
     phone: number;
     address: string;
+    isProfessional?: Nullable<boolean>;
 }
 
 export interface LoginInput {
@@ -93,6 +94,7 @@ export interface User {
     password: string;
     phone: number;
     address: string;
+    isProfessional: boolean;
 }
 
 export interface Category {
@@ -123,6 +125,7 @@ export interface IQuery {
     jobs(): Nullable<Job>[] | Promise<Nullable<Job>[]>;
     jobByName(name: string): Nullable<Job> | Promise<Nullable<Job>>;
     jobByCategory(category: string): Nullable<Job> | Promise<Nullable<Job>>;
+    jobById(id: number): Nullable<Job> | Promise<Nullable<Job>>;
     categories(): Nullable<Category>[] | Promise<Nullable<Category>[]>;
     categoryById(id: number): Nullable<Category> | Promise<Nullable<Category>>;
     categoryByName(name: string): Nullable<Category> | Promise<Nullable<Category>>;
@@ -131,6 +134,7 @@ export interface IQuery {
     users(): Nullable<User>[] | Promise<Nullable<User>[]>;
     userByEmail(email: string): Nullable<User> | Promise<Nullable<User>>;
     userById(id: number): Nullable<User> | Promise<Nullable<User>>;
+    userMeetByDate(id: number, date: string): boolean | Promise<boolean>;
     sendUserRecovery(user: UserInput): MailReturn | Promise<MailReturn>;
 }
 
@@ -151,7 +155,12 @@ export interface IMutation {
 }
 
 export interface Meet {
-    exampleField?: Nullable<number>;
+    id: number;
+    idJob: Job;
+    idProfessional: User;
+    idClient: User;
+    meetDate: string;
+    startTime: string;
 }
 
 export interface UserSettings {
@@ -161,7 +170,7 @@ export interface UserSettings {
 }
 
 export interface LoginReturn {
-    user: User;
+    email: string;
     token: string;
 }
 

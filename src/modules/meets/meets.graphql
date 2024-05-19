@@ -1,6 +1,21 @@
 type Meet {
-  # Example field (placeholder)
-  exampleField: Int
+  id: Int!
+  idJob: Job!
+  idProfessional: User!
+  idClient: User!
+  meetDate: String!
+  startTime: String!
+  
+}
+
+type Job {
+  id: Int!
+  jobName: String!
+  description: String!
+  averageRate: Int!
+  idCategory: Category!
+  idProfessional: User!
+  requestsCount: Int!
 }
 
 input CreateMeetInput {

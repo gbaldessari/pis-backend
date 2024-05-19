@@ -63,6 +63,7 @@ type Query {
   jobs: [Job]!
   jobByName(name: String!): Job
   jobByCategory(category: String!): Job
+  jobById(id: Int!): Job
   categories: [Category]!
   categoryById(id: Int!): Category
   categoryByName(name: String!): Category

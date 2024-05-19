@@ -5,6 +5,7 @@ import { UserSetting } from 'src/modules/users/entities/user-settings.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Job } from 'src/modules/jobs/entities/job.entity';
 import { Category } from 'src/modules/jobs/entities/category.entity';
+import { Meet } from 'src/modules/meets/entities/meet.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { Category } from 'src/modules/jobs/entities/category.entity';
           username: configService.get<string>('TYPEORM_USERNAME'),
           password: configService.get<string>('TYPEORM_PASSWORD'),
           database: configService.get<string>('TYPEORM_DATABASE'),
-          entities: [User, UserSetting, Job, Category],
+          entities: [User, UserSetting, Job, Category, Meet],
           synchronize: configService.get<boolean>('TYPEORM_SYNCHRONIZE'),
           logging: true,
       }),

@@ -20,12 +20,15 @@ export class JobsService {
   ){}
 
   async getJobs() {
-    const josb = await this.jobRepository.find();
-    return josb;
+    return await this.jobRepository.find();
   }
 
   async getByName(jobName: string) {
     return await this.jobRepository.findOne({where: {jobName: jobName}});
+  }
+
+  async getById(id: number) {
+    return await this.jobRepository.findOne({where: {id: id}});
   }
 
   async getByCategory(categoryName: string) {
@@ -41,7 +44,8 @@ export class JobsService {
   async createJob(createJobInput: CreateJobInput) {
     const existName = await this.getByName(createJobInput.jobName);
     const category = await this.categoryService.getById(createJobInput.idCategory);
-    const existCategory = await (await this.getByCategory(category.categoryName)).find(job => job.jobName === createJobInput.jobName)
+    const existCategory = (await this.getByCategory(category.categoryName)).find(
+      job => job.jobName === createJobInput.jobName)
     const professional = await this.userService.getUserById(
       createJobInput.idProfessional);
 

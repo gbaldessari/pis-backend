@@ -5,15 +5,17 @@ import { UpdateMeetInput } from './dto/update-meet.input';
 
 @Resolver('Meet')
 export class MeetsResolver {
-  constructor(private readonly meetsService: MeetsService) {}
+  constructor(
+    private readonly meetsService: MeetsService
+  ) {}
 
   @Mutation('createMeet')
-  create(@Args('createMeetInput') createMeetInput: CreateMeetInput) {
-    return this.meetsService.create(createMeetInput);
+  createMeet(@Args('createMeetInput') createMeetInput: CreateMeetInput) {
+    return this.meetsService.createMeet(createMeetInput);
   }
 
   @Query('meets')
-  findAll() {
+  getMeets() {
     return this.meetsService.findAll();
   }
 

@@ -32,6 +32,11 @@ export class UserResolver {
         return this.userService.getUsers();
     }
 
+    @Query('userMeetByDate')
+    async getUserMeetByDate(@Args('id') id:number, @Args('date') date: string){
+        return this.userService.getUserMeetByDate(id,date);
+    }
+
     @Mutation('login')
     login(@Args('loginInput') loginInput: LoginInput) {
         return this.userService.login(loginInput);
