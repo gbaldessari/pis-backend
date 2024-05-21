@@ -27,6 +27,10 @@ export class Job {
     @Field()
     description:string;
 
+    @Column({nullable: false})
+    @Field()
+    price:number;
+
     @Column({default: 0, nullable: true})
     @Field()
     averageRate:number;

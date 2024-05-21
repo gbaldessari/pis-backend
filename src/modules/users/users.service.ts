@@ -228,11 +228,43 @@ export class UserService {
         success: false,
       };
     }
+
     return {
       data: user,
       message: 'Fecha disponible',
       success: true,
     };
+  }
+
+  async getTotalSalesGenerated(id:number){
+    const findProfessional: User = (await this.getUserById(id)).data;
+    if (!findProfessional || !findProfessional.isProfessional) return {
+      data: null,
+      message: 'Error al encontrar usuario profesional',
+      success: false,
+    }
+    
+    const totalSales = findProfessional.jobs.reduce((acc, job) => acc + job.price, 0);
+    return {
+      data: totalSales,
+      message: 'Calculo exitoso',
+      success: true,
+    };
+  }
+
+  async getTotalSalesMonth(id:number){
+    const findProfessional: User = (await this.getUserById(id)).data;
+    if (!findProfessional || !findProfessional.isProfessional) return {
+      data: null,
+      message: 'Error al encontrar usuario profesional',
+      success: false,
+    }
+
+    // 1) ir a la lista de meets del profesional
+    // 2) ver el rango de fechas para calcular por mes (teniendo en cuenta el mes actual?)
+    // 3) iterar jobs.price entre meets del rango de fechas
+    // 4) retornar suma de la iteración
+
   }
 
 }
