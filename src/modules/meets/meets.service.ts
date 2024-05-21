@@ -9,6 +9,7 @@ import { JobsService } from '../jobs/jobs.service';
 import { Job } from '../jobs/entities/job.entity';
 import { User } from '../users/entities/user.entity';
 import { HttpStatus } from '@nestjs/common';
+import { UpdateJobInput } from '../jobs/dto/update-job.input';
 
 @Injectable()
 export class MeetsService {
@@ -19,6 +20,20 @@ export class MeetsService {
     private jobSrevice: JobsService,
     private connection: Connection,
   ) {}
+
+  async getById(id: number) {
+    try {
+      return {
+        data: await this.meetRepository.findOneBy({id}),
+        success: true
+      }
+    } catch (e) {
+      return {
+        data: null,
+        success: false
+      }
+    }
+  }
 
   async createMeet(createMeetInput: CreateMeetInput) {
     const job: Job = (await this.jobSrevice.getById(createMeetInput.idJob)).data;
@@ -89,6 +104,32 @@ export class MeetsService {
       message: 'Cita registrada',
       success: true
     };
+  }
+
+  async finishMeet(id: number) {
+    const meet: Meet = (await this.getById(id)).data;
+    if(!meet) return {
+      data: null,
+      message: 'Cita no encontrada',
+      success: false
+    }
+
+    const meetUpdated: Meet = {
+      ...meet,
+      isDone: true
+    };
+
+    this.meetRepository.update(meet.id, meetUpdated)
+    const jobUpdated: UpdateJobInput = {
+      requestsCount: meet.idJob.requestsCount + 1
+    }
+    this.jobSrevice.updateJob(meet.idJob.jobName, jobUpdated);
+
+    return {
+      data: (await this.getById(id)).data,
+      message: 'Cita finalizada',
+      success: true
+    }
   }
 
   findAll() {

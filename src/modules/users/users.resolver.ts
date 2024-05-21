@@ -18,12 +18,12 @@ export class UserResolver {
     ) {}
 
     @Query('userByEmail')
-    getUserByEmail(@Args('email') email: string) {
+    async getUserByEmail(@Args('email') email: string) {
         return this.userService.getUserByEmail(email);
     }
 
     @Query('userById')
-    getUserById(@Args('id') id:number){
+    async getUserById(@Args('id') id:number){
         return this.userService.getUserById(id);
     }
 
@@ -35,6 +35,21 @@ export class UserResolver {
     @Query('userMeetByDate')
     async getUserMeetByDate(@Args('id') id:number, @Args('date') date: string){
         return this.userService.getUserMeetByDate(id,date);
+    }
+
+    @Query('totalSalesGenerated')
+    async getTotalSalesGenerated(@Args('id') id:number){
+        return this.userService.getTotalSalesGenerated(id);
+    }
+
+    @Query('totalSalesMonth')
+    async getTotalSalesMonth(@Args('id') id:number){
+        return this.userService.getTotalSalesMonth(id);
+    }
+
+    @Query('fiveFavoritesJobs')
+    async getFiveFavoritesJobs(@Args('id') id:number){
+        return this.userService.getFiveFavoritesJobs(id);
     }
 
     @Mutation('login')

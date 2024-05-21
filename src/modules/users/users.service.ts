@@ -210,8 +210,10 @@ export class UserService {
     }
 
     if(user.isProfessional) {
-      const existDate = user.professionalMeets.find((meet) => meet.meetDate === date);
-      const existTimeStart = user.professionalMeets.find((meet) => meet.startTime === date);
+      const existDate = user.professionalMeets.find(
+        (meet) => meet.meetDate === date);
+      const existTimeStart = user.professionalMeets.find(
+        (meet) => meet.startTime === date);
 
       if (existDate && existTimeStart) return {
         data: null,
@@ -236,7 +238,7 @@ export class UserService {
     };
   }
 
-  async getTotalSalesGenerated(id:number){
+  async getTotalSalesGenerated(id: number){
     const findProfessional: User = (await this.getUserById(id)).data;
     if (!findProfessional || !findProfessional.isProfessional) return {
       data: null,
@@ -244,7 +246,8 @@ export class UserService {
       success: false,
     }
     
-    const totalSales = findProfessional.jobs.reduce((acc, job) => acc + job.price, 0);
+    const totalSales = findProfessional.professionalMeets.reduce(
+      (acc, meet) => acc + meet.idJob.price, 0);
     return {
       data: totalSales,
       message: 'Calculo exitoso',
@@ -252,7 +255,7 @@ export class UserService {
     };
   }
 
-  async getTotalSalesMonth(id:number){
+  async getTotalSalesMonth(id: number){
     const findProfessional: User = (await this.getUserById(id)).data;
     if (!findProfessional || !findProfessional.isProfessional) return {
       data: null,
@@ -260,11 +263,41 @@ export class UserService {
       success: false,
     }
 
-    // 1) ir a la lista de meets del profesional
-    // 2) ver el rango de fechas para calcular por mes (teniendo en cuenta el mes actual?)
-    // 3) iterar jobs.price entre meets del rango de fechas
-    // 4) retornar suma de la iteración
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
+    const totalSales = findProfessional.professionalMeets
+    .filter(meet => {
+      const meetDate = new Date(meet.meetDate);
+      return meet.isDone && meetDate >= startOfMonth && meetDate <= endOfMonth;
+    })
+    .reduce((acc, meet) => acc + meet.idJob.price, 0);
+
+    return {
+      data: totalSales,
+      message: 'Calculo exitoso',
+      success: true,
+    };
+  }
+
+  async getFiveFavoritesJobs(id: number){
+    const findProfessional: User = (await this.getUserById(id)).data;
+    if (!findProfessional || !findProfessional.isProfessional) return {
+      data: null,
+      message: 'Error al encontrar usuario profesional',
+      success: false,
+    }
+
+    const sortedJobs = findProfessional.jobs.sort(
+      (a, b) => b.requestsCount - a.requestsCount);
+    const topFiveJobs = sortedJobs.slice(0, 5);
+
+    return {
+      data: topFiveJobs,
+      message: 'Calculo exitoso',
+      success: true,
+    };
   }
 
 }

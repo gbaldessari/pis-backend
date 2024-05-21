@@ -15,4 +15,7 @@ export class UpdateJobInput{
   @Field({nullable: true})
   idProfessional?: number;
 
+  @Field({nullable: true})
+  requestsCount?: number;
+  
 }

@@ -44,4 +44,7 @@ export class Meet {
     @Field()
     endTime:string;
 
+    @Column({nullable: false, default: false})
+    @Field()
+    isDone:boolean;
 }
