@@ -23,11 +23,31 @@ export class UserService {
   ) {}
 
   async getUserByEmail(email: string) {
-    return await this.userRepository.findOneBy({ email });
+    try {
+      return {
+        data: await this.userRepository.findOneBy({email}),
+        success: true
+      }
+    } catch (e) {
+      return {
+        data: null, 
+        success: false
+      };
+    }
   }
 
   async getUserById(id:number){
-    return await this.userRepository.findOneBy({id});
+    try {
+      return {
+        data: await this.userRepository.findOneBy({id}),
+        success: true
+      }
+    } catch (e) {
+      return {
+        data: null, 
+        success: false
+      };
+    }
   }
 
   async getUsers() {
@@ -37,30 +57,46 @@ export class UserService {
   async login(loginInput: LoginInput) {
     try {
       const { email, password } = loginInput;
-      const findUser = await this.userRepository.findOne({ where: { email } });
+      const findUser: User = (await this.getUserByEmail(email)).data;
 
-      if (!findUser) throw new Error('Usuario no encontrado');
+      if (!findUser) return {
+        data: {token: null, email: null},
+        message: 'Usuario no encontrado',
+        success: false
+      };
 
       const passwordMatch = await compare(password, findUser.password);
-      if (!passwordMatch) throw new Error('Contraseña incorrecta');
+      if (!passwordMatch) return {
+        data: {token: null, email: null},
+        message: 'Contraseña incorrecta',
+        success: false
+      };
 
       const payload = { email: findUser.email, username: findUser.username };
       const access_token = this.jwtService.sign(payload);
 
-      return { email: findUser.email, token: access_token };
+      return {
+        data: {token: access_token, email: findUser.email},
+        message: 'Sesion iniciada',
+        success: true
+      };
     } catch (error) {
       throw new Error(String(error) + "INTERNAL ERROR");
     }
   }
 
   async register(registerInput: RegisterInput) {
-    const exist = await this.userRepository.findOne({
+    const exist: User = await this.userRepository.findOne({
       where: {
         email: registerInput?.email,
       },
     });
 
-    if (exist) throw new Error('Usuario ya existe');
+    if (exist) return {
+      data: null,
+      message: 'Usuario ya existe',
+      success: false
+    };
 
     const { password } = registerInput;
 
@@ -78,26 +114,42 @@ export class UserService {
         }
       },
     );
-    return { user: user, message: 'Usuario registrado' };
+    return { 
+      data: user, 
+      message: 'Usuario registrado',
+      success: true
+    };
   }
 
   async updateByEmail(email: string, editUserInput: EditUserInput) {
-    const user: User = await this.getUserByEmail(email);
+    const user: User = (await this.getUserByEmail(email)).data;
 
-    if (!user) throw new Error('Usuario no encontrado');
+    if (!user) return {
+      data: null,
+      message: 'Usuario no encontrado',
+      success: false
+    };
 
     const updatedUser: User = await this.userRepository.save({
       ...user,
       ...editUserInput
     });
 
-    return updatedUser;
+    return {
+      data: updatedUser,
+      message: 'Usuario actualizado',
+      success: true
+    };
   }
 
   async requestResetPassword(email: string) {
     try {
-      const findUser: User = await this.getUserByEmail(email);
-      if (!findUser) throw new Error('Usuario no encontrado');
+      const findUser: User = (await this.getUserByEmail(email)).data;
+      if (!findUser) return {
+        data: null,
+        message: 'Usuario no encontrado',
+        success: false,
+      }
 
       const resetToken = randomBytes(20).toString('hex')
       findUser.resetPasswordToken = resetToken;
@@ -107,8 +159,9 @@ export class UserService {
       this.mailService.sendUserRecovery(findUser);
       console.log('Correo enviado');
       return {
-        message: 'Se ha enviado un codigo a tu correo',
         data: findUser,
+        message: 'Se ha enviado un codigo a tu correo',
+        success: true,
       };
     } catch (error) {
       throw new Error(String(error) + "INTERNAL ERROR");
@@ -118,10 +171,13 @@ export class UserService {
   async resetPassword(resetPasswordInput: ResetPasswordInput) {
     try{
       const { email, resetPasswordToken, password } = resetPasswordInput;
-      const findUser = await this.getUserByEmail(email);
+      const findUser: User = (await this.getUserByEmail(email)).data;
 
-      if (!findUser) throw new Error('Usuario no encontrado');
-
+      if (!findUser) return {
+        data: null,
+        message: 'Usuario no encontrado',
+        success: false,
+      }
 
       if (findUser.resetPasswordToken == resetPasswordToken) {
         const hashPassword = await hash(password, 10);
@@ -130,13 +186,15 @@ export class UserService {
           password: hashPassword,
         });
         return {
-          message: 'Contrasena cambiada exitosamente',
           data: findUser,
+          message: 'Contrasena cambiada exitosamente',
+          success: true,
         };
       }
       return {
-        message: 'Codigo incorrecto',
         data: findUser,
+        message: 'Codigo incorrecto',
+        success: false,
       };
     } catch (error) {
       throw new Error(String(error) + "INTERNAL ERROR");
@@ -144,21 +202,37 @@ export class UserService {
   }
 
   async getUserMeetByDate(id: number, date: string) {
-    const user = await this.getUserById(id);
-    if (!user) throw new Error('Usuario no encontrado');
+    const user: User = (await this.getUserById(id)).data;
+    if (!user) return {
+      data: null,
+      message: 'Usuario no encontrado',
+      success: false,
+    }
 
     if(user.isProfessional) {
       const existDate = user.professionalMeets.find((meet) => meet.meetDate === date);
       const existTimeStart = user.professionalMeets.find((meet) => meet.startTime === date);
 
-      if (existDate && existTimeStart) return false;
+      if (existDate && existTimeStart) return {
+        data: null,
+        message: 'Ya existe una cita en esa fecha',
+        success: false,
+      };
     } else {
       const existDate = user.userMeets.find((meet) => meet.meetDate === date);
       const existTimeStart = user.userMeets.find((meet) => meet.startTime === date);
 
-      if (existDate && existTimeStart) return false;
+      if (existDate && existTimeStart) return {
+        data: null,
+        message: 'Ya existe una cita en esa fecha',
+        success: false,
+      };
     }
-    return true;
+    return {
+      data: user,
+      message: 'Fecha disponible',
+      success: true,
+    };
   }
 
 }

@@ -21,23 +21,48 @@ export class MeetsService {
   ) {}
 
   async createMeet(createMeetInput: CreateMeetInput) {
-    const job: Job = await this.jobSrevice.getById(createMeetInput.idJob);
-    if(!job) throw new Error('Servicio no encontrado');
-    const professional: User = await this.userService.getUserById(createMeetInput.idProfessional);
-    if(!professional) throw new Error('Profesional no encontrado');
-    const client: User = await this.userService.getUserById(createMeetInput.idUser);
-    if(!client) throw new Error('Cliente no encontrado');
+    const job: Job = (await this.jobSrevice.getById(createMeetInput.idJob)).data;
+    if(!job) return {
+      data: null,
+      message: 'Servicio no encontrado',
+      success: false
+    }
 
-    if(job.idProfessional !== professional) {
-    throw new Error('El profesional no corresponde al servicio');}
+    const professional: User = (await this.userService.getUserById(createMeetInput.idProfessional)).data;
+    if(!professional) return {
+      data: null,
+      message: 'Profesional no encontrado',
+      success: false
+    }
+
+    const client: User = (await this.userService.getUserById(createMeetInput.idUser)).data;
+    if(!client) return {
+      data: null,
+      message: 'Usuario no encontrado',
+      success: false
+    }
+
+    if(job.idProfessional !== professional) return {
+      data: null,
+      message: 'El profesional no ofrece el servicio seleccionado',
+      success: false
+    }
 
     const confDateProffesional = await this.userService.getUserMeetByDate(
       professional.id, createMeetInput.meetDate);
-    if(confDateProffesional) throw new Error('El profesional ya tiene una cita en esa fecha');
+    if(confDateProffesional) return {
+      data: null,
+      message: 'El profesional ya tiene una cita en esa fecha',
+      success: false
+    }
 
     const confDateUser = await this.userService.getUserMeetByDate(
       client.id, createMeetInput.meetDate);
-    if(confDateUser) throw new Error('El usuario ya tiene una cita en esa fecha');
+    if(confDateUser) return {
+      data: null,
+      message: 'El usuario ya tiene una cita en esa fecha',
+      success: false
+    }
 
     const meetInput = {
       idJob: job,
@@ -59,8 +84,11 @@ export class MeetsService {
         }
       },
     );
-    return { meet: meet, message: 'Cita registrada' };
-
+    return {
+      data: meet,
+      message: 'Cita registrada',
+      success: true
+    };
   }
 
   findAll() {

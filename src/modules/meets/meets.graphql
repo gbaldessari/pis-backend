@@ -5,7 +5,6 @@ type Meet {
   idClient: User!
   meetDate: String!
   startTime: String!
-  
 }
 
 type Job {

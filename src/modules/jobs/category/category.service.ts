@@ -15,23 +15,55 @@ export class CategoryService {
     ) {}
 
     async getCategories(){
-        return await this.categoryRepository.find();
+        try {
+            return {
+                data: await this.categoryRepository.find(),
+                success: true
+            } 
+        } catch(e) {
+            return {
+                data: null,
+                success: false
+            }
+        }
     }
 
     async getById(id:number){
-        return await this.categoryRepository.findOneBy({id});
+        try {
+            return {
+                data: await this.categoryRepository.findOneBy({id}),
+                success: true
+            } 
+        } catch(e) {
+            return {
+                data: null,
+                success: false
+            }
+        }
     }
 
     async getByName(name:string){
-        return await this.categoryRepository.findOneBy({categoryName: name})
+        try {
+            return {
+                data: await this.categoryRepository.findOneBy({categoryName: name}),
+                success: true
+            } 
+        } catch(e) {
+            return {
+                data: null,
+                success: false
+            }
+        }
     }
 
     async createCategory(createCategoryInput: CreateCategoryInput){
         const exist = await this.getByName(createCategoryInput.name)
 
-        console.log(exist)
-
-        if(exist) throw new Error('Esta categoria ya existe')
+        if(exist) return {
+            data: null,
+            message: 'Categoria ya existe',
+            success: false
+        }
         
         const categoryInput = {
             categoryName: createCategoryInput.name,
@@ -47,7 +79,11 @@ export class CategoryService {
                 }
             },
         );
-        return {category: category, message: "Categoría creado"}
+        return {
+            data: category,
+            message: 'Categoria creada',
+            success: true
+        }
     }
 
 }

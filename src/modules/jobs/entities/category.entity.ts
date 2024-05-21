@@ -10,7 +10,7 @@ export class Category {
     @Field((type) => Int)
     id:number;
 
-    @Column({nullable: false})
+    @Column({nullable: false, unique: true})
     @Field()
     categoryName:string;
 

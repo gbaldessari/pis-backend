@@ -22,23 +22,38 @@ type Category {
   categoryName: String!
 }
 
-type CreateJobReturn {
-  job: Job!
-  message: String!
+type QueryReturn {
+  data: Job!
+  success: Boolean!
 }
 
-type UpdateJobReturn {
-  job: Job!
-  message: String!
+type QueryCategoryReturn {
+  data: Category!
+  success: Boolean!
 }
 
-type RemoveJobReturn {
+type QueryByCategoryReturn {
+  data: [Job]!
   message: String!
+  success: Boolean!
 }
 
-type CreateCategoryReturn {
-  category: Category!
+type DefaultReturn {
+  data: Job!
   message: String!
+  success: Boolean!
+}
+
+type DefaultCategoryReturn {
+  data: Category!
+  message: String!
+  success: Boolean!
+
+}
+
+type RemoveReturn {
+  message: String!
+  success: Boolean!
 }
 
 input CreateJobInput {
@@ -61,17 +76,17 @@ input UpdateJobInput {
 
 type Query {
   jobs: [Job]!
-  jobByName(name: String!): Job
-  jobByCategory(category: String!): Job
-  jobById(id: Int!): Job
+  jobByName(name: String!): QueryReturn!
+  jobByCategory(category: String!): QueryByCategoryReturn!
+  jobById(id: Int!): QueryReturn!
   categories: [Category]!
-  categoryById(id: Int!): Category
-  categoryByName(name: String!): Category
+  categoryById(id: Int!): QueryCategoryReturn!
+  categoryByName(name: String!): QueryCategoryReturn!
 }
 
 type Mutation {
-  createJob(createJobInput: CreateJobInput!): CreateJobReturn!
-  updateJob(jobName: String!, updateJobInput: UpdateJobInput!): UpdateJobReturn!
-  removeJob(id: Int!): RemoveJobReturn!
-  createCategory(createCategoryInput: CreateCategoryinput!): CreateCategoryReturn!
+  createJob(createJobInput: CreateJobInput!): DefaultReturn!
+  updateJob(jobName: String!, updateJobInput: UpdateJobInput!): DefaultReturn!
+  removeJob(id: Int!): RemoveReturn!
+  createCategory(createCategoryInput: CreateCategoryinput!): DefaultCategoryReturn!
 }

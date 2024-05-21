@@ -14,23 +14,26 @@ type UserSettings {
   receiveNotifications: Boolean!
 }
 
-type LoginReturn {
-  email: String!
-  token: String!
-}
-
-type RegisterReturn {
-  user: User!
-  message: String!
-}
-
-type ResetPasswordReturn {
-  message: String!
+type DefaultReturn {
   data: User!
+  message: String!
+  success: Boolean!
 }
 
-type MailReturn {
+type DataLoginReturn {
+  token: String!
+  email: String!
+}
+
+type LoginReturn {
+  data: DataLoginReturn!
   message: String!
+  success: Boolean!
+}
+
+type QueryReturn {
+  data: User!
+  success: Boolean!
 }
 
 input UserInput {
@@ -78,17 +81,17 @@ input ResetPasswordInput {
 
 type Query {
   users: [User]!
-  userByEmail(email: String!): User
-  userById(id: Int!): User
-  userMeetByDate(id: Int!, date: String!): Boolean!
-  sendUserRecovery(user: UserInput!): MailReturn!
+  userByEmail(email: String!): QueryReturn!
+  userById(id: Int!): QueryReturn!
+  userMeetByDate(id: Int!, date: String!): QueryReturn!
+  sendUserRecovery(user: UserInput!): DefaultReturn!
 }
 
 type Mutation {
-  register(registerInput: RegisterInput!): RegisterReturn!
+  register(registerInput: RegisterInput!): DefaultReturn!
   login(loginInput: LoginInput!): LoginReturn!
-  createUserSettings(userSettingsInput: UserSettingsInput!): UserSettings!
-  editUser(email: String!, editUserInput: EditUserInput!): User!
-  requestPasswordReset(email: String!): ResetPasswordReturn!
-  resetPassword(resetPasswordInput: ResetPasswordInput!): ResetPasswordReturn! 
+  createUserSettings(userSettingsInput: UserSettingsInput!): DefaultReturn!
+  editUser(email: String!, editUserInput: EditUserInput!): DefaultReturn!
+  requestPasswordReset(email: String!): DefaultReturn!
+  resetPassword(resetPasswordInput: ResetPasswordInput!): DefaultReturn! 
 }
