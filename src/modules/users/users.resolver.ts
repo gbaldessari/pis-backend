@@ -52,6 +52,11 @@ export class UserResolver {
         return this.userService.getFiveFavoritesJobs(id);
     }
 
+    @Query('getAvailableTimes')
+    async getAvailableTimes(@Args('id') id:number, @Args('date') date: string){
+        return this.userService.showAvailableTimes(id,date);
+    }
+
     @Mutation('login')
     login(@Args('loginInput') loginInput: LoginInput) {
         return this.userService.login(loginInput);

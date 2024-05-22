@@ -132,8 +132,8 @@ export class MeetsService {
     }
   }
 
-  findAll() {
-    return this.meetRepository.find();
+  async getMeets() {
+    return await this.meetRepository.find();
   }
 
   findOne(id: number) {

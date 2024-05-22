@@ -11,6 +11,7 @@ import { EditUserInput } from './dto/edit-user-input';
 import { EmailService } from './email/email.service';
 import { ResetPasswordInput } from './dto/reset-password-input';
 import { randomBytes } from 'crypto';
+import { find } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -296,6 +297,36 @@ export class UserService {
     return {
       data: topFiveJobs,
       message: 'Calculo exitoso',
+      success: true,
+    };
+  }
+
+  async showAvailableTimes(id: number, date: string){
+    const findProfessional: User = (await this.getUserById(id)).data;
+    if (!findProfessional || !findProfessional.isProfessional) return {
+      data: null,
+      message: 'Error al encontrar usuario profesional',
+      success: false,
+    }
+
+    const meetDate = new Date(date);
+
+    let times: string[] = [];
+    for (let i = 8; i <= 20; i++) {
+      times.push(i + ':00');
+    }
+
+    const day = findProfessional.professionalMeets.filter(
+      meet => new Date(meet.meetDate).toDateString() === meetDate.toDateString());
+
+    day.forEach(meet => {
+      const startHour = parseInt(meet.startTime.split(':')[0]);
+      times = times.filter(time => time !== startHour + ':00');
+    });
+
+    return {
+      data: times,
+      message: 'Horas disponibles retornadas',
       success: true,
     };
   }

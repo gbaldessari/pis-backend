@@ -8,15 +8,20 @@ export class MeetsResolver {
   constructor(
     private readonly meetsService: MeetsService
   ) {}
-
-  @Mutation('createMeet')
-  createMeet(@Args('createMeetInput') createMeetInput: CreateMeetInput) {
-    return this.meetsService.createMeet(createMeetInput);
+  
+  @Query('meets')
+  async getMeets() {
+    return await this.meetsService.getMeets();
   }
 
-  @Query('meets')
-  getMeets() {
-    return this.meetsService.findAll();
+  @Mutation('createMeet')
+  async createMeet(@Args('createMeetInput') createMeetInput: CreateMeetInput) {
+    return await this.meetsService.createMeet(createMeetInput);
+  }
+  
+  @Mutation('finishMeet')
+  async finishMeet(@Args('id') id: number) {
+    return await this.meetsService.finishMeet(id);
   }
 
   @Query('meet')

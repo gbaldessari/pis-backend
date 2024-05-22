@@ -105,6 +105,7 @@ type Query {
   totalSalesGenerated(id: Int!): CalcReturn!
   totalSalesMonth(id: Int!): CalcReturn!
   fiveFavoritesJobs(id: Int!): [Job]!
+  getAvailableTimes(id: Int!, date: String!): [String]!
 }
 
 type Mutation {
