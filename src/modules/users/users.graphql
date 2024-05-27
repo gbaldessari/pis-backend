@@ -25,7 +25,7 @@ type UserSettings {
 }
 
 type DefaultReturn {
-  data: User!
+  data: String!
   message: String!
   success: Boolean!
 }
@@ -53,6 +53,10 @@ type CalcReturn {
 
 }
 
+type MailReturn {
+  message: String!
+}
+
 input UserInput {
   id: Int!
   username: String!
@@ -60,6 +64,7 @@ input UserInput {
   password: String!	
   phone: Int!
   address: String!
+  isProfessional: Boolean
 }
 
 input RegisterInput {
@@ -100,19 +105,19 @@ type Query {
   users: [User]!
   userByEmail(email: String!): QueryReturn!
   userById(id: Int!): QueryReturn!
-  userMeetByDate(id: Int!, date: String!): QueryReturn!
-  sendUserRecovery(user: UserInput!): DefaultReturn!
+  userMeetByDate(id: Int!, date: String!): DefaultReturn!
   totalSalesGenerated(id: Int!): CalcReturn!
   totalSalesMonth(id: Int!): CalcReturn!
   fiveFavoritesJobs(id: Int!): [Job]!
   getAvailableTimes(id: Int!, date: String!): [String]!
+  sendUserRecovery(user: UserInput!): MailReturn!
 }
 
 type Mutation {
   register(registerInput: RegisterInput!): DefaultReturn!
   login(loginInput: LoginInput!): LoginReturn!
-  createUserSettings(userSettingsInput: UserSettingsInput!): DefaultReturn!
   editUser(email: String!, editUserInput: EditUserInput!): DefaultReturn!
   requestPasswordReset(email: String!): DefaultReturn!
   resetPassword(resetPasswordInput: ResetPasswordInput!): DefaultReturn! 
+  createUserSettings(userSettingsInput: UserSettingsInput!): DefaultReturn!
 }

@@ -1,7 +1,6 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { MeetsService } from './meets.service';
 import { CreateMeetInput } from './dto/create-meet.input';
-import { UpdateMeetInput } from './dto/update-meet.input';
 
 @Resolver('Meet')
 export class MeetsResolver {
@@ -25,17 +24,12 @@ export class MeetsResolver {
   }
 
   @Query('meet')
-  findOne(@Args('id') id: number) {
-    return this.meetsService.findOne(id);
-  }
-
-  @Mutation('updateMeet')
-  update(@Args('updateMeetInput') updateMeetInput: UpdateMeetInput) {
-    return this.meetsService.update(updateMeetInput.id, updateMeetInput);
+  async getMeetById(@Args('id') id: number) {
+    return this.meetsService.getMeetById(id);
   }
 
   @Mutation('removeMeet')
-  remove(@Args('id') id: number) {
-    return this.meetsService.remove(id);
+  async removeMeet(@Args('id') id: number) {
+    return this.meetsService.removeMeet(id);
   }
 }

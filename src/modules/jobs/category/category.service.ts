@@ -80,7 +80,7 @@ export class CategoryService {
             },
         );
         return {
-            data: category,
+            data: category.categoryName,
             message: 'Categoria creada',
             success: true
         }

@@ -96,25 +96,25 @@ export class JobsService {
       data: null,
       message: 'Categoria no existe',
       success: false
-    }
+    };
     if(!professional) return {
       data: null,
       message: 'Profesional no registrado',
       success: false
-    }
+    };
     if(existCategory === existName) return {
       data: null,
       message: 'Ya existe un servicio con este nombre en la categoría: '+
       category.categoryName,
       success: false
-    }
+    };
     
     const jobInput = {
       jobName: createJobInput.jobName,
       description: createJobInput.description,
       idCategory: category,
       idProfessional: professional,
-    }
+    };
 
     let job: Job;
     await this.connection.transaction(
@@ -129,7 +129,7 @@ export class JobsService {
     );
 
     return { 
-      data: job, 
+      data: job.jobName, 
       message: 'Servicio creado', 
       success: true
     }
@@ -189,7 +189,7 @@ export class JobsService {
 
     await this.jobRepository.update(job.id,updateInput);
     return {
-      data: await this.jobRepository.findOneBy({id: job.id}),
+      data: (await this.getById(job.id)).data.jobName,
       message: 'Servicio actualizado',
       success: true
     };

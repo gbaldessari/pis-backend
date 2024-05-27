@@ -11,7 +11,6 @@ import { EditUserInput } from './dto/edit-user-input';
 import { EmailService } from './email/email.service';
 import { ResetPasswordInput } from './dto/reset-password-input';
 import { randomBytes } from 'crypto';
-import { find } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -116,7 +115,7 @@ export class UserService {
       },
     );
     return { 
-      data: user, 
+      data: user.email, 
       message: 'Usuario registrado',
       success: true
     };
@@ -137,7 +136,7 @@ export class UserService {
     });
 
     return {
-      data: updatedUser,
+      data: updatedUser.email,
       message: 'Usuario actualizado',
       success: true
     };
@@ -160,7 +159,7 @@ export class UserService {
       this.mailService.sendUserRecovery(findUser);
       console.log('Correo enviado');
       return {
-        data: findUser,
+        data: findUser.email,
         message: 'Se ha enviado un codigo a tu correo',
         success: true,
       };
@@ -187,13 +186,13 @@ export class UserService {
           password: hashPassword,
         });
         return {
-          data: findUser,
+          data: findUser.email,
           message: 'Contrasena cambiada exitosamente',
           success: true,
         };
       }
       return {
-        data: findUser,
+        data: findUser.email,
         message: 'Codigo incorrecto',
         success: false,
       };
@@ -233,7 +232,7 @@ export class UserService {
     }
 
     return {
-      data: user,
+      data: user.email,
       message: 'Fecha disponible',
       success: true,
     };
@@ -268,7 +267,7 @@ export class UserService {
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-    const totalSales = findProfessional.professionalMeets
+    const totalSales: number = findProfessional.professionalMeets
     .filter(meet => {
       const meetDate = new Date(meet.meetDate);
       return meet.isDone && meetDate >= startOfMonth && meetDate <= endOfMonth;

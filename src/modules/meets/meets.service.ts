@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMeetInput } from './dto/create-meet.input';
-import { UpdateMeetInput } from './dto/update-meet.input';
 import { Meet } from './entities/meet.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Connection, EntityManager } from 'typeorm';
@@ -43,7 +42,8 @@ export class MeetsService {
       success: false
     }
 
-    const professional: User = (await this.userService.getUserById(createMeetInput.idProfessional)).data;
+    const professional: User = (await this.userService.getUserById(
+      createMeetInput.idProfessional)).data;
     if(!professional) return {
       data: null,
       message: 'Profesional no encontrado',
@@ -136,15 +136,31 @@ export class MeetsService {
     return await this.meetRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} meet`;
+  async getMeetById(id: number) {
+    try {
+      return {
+        data: await this.getMeetById(id),
+        success: true
+      }
+    } catch (e) {
+      return {
+        data: null,
+        success: false
+      }
+    }
   }
 
-  update(id: number, updateMeetInput: UpdateMeetInput) {
-    return `This action updates a #${id} meet`;
-  }
+  async removeMeet(id: number) {
+    const meet: Meet = await this.getMeetById(id);
+    if (!meet) return {
+      message: 'Reunion no encontrada',
+      success: false
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} meet`;
+    await this.meetRepository.remove(meet);
+    return {
+      message: 'Reunion eliminada',
+      success: true
+    };
   }
 }
