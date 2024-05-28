@@ -9,6 +9,7 @@ import { UserSettingsResolver } from "src/modules/users/user-settings.resolver";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { EmailService } from "src/modules/users/email/email.module";
+import { JwtStrategy } from "./jwt/jwt.strategy";
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { EmailService } from "src/modules/users/email/email.module";
     UserResolver, 
     UserService, 
     UserSettingsService,
-    UserSettingsResolver
+    UserSettingsResolver,
+    JwtStrategy
   ],
   exports: [UserService, UserSettingsService]
 })

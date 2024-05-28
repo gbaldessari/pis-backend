@@ -9,6 +9,8 @@ import { UserService } from "./users.service";
 import { LoginInput } from "./dto/login-input";
 import { ResetPasswordInput } from "./dto/reset-password-input";
 import { EditUserInput } from "./dto/edit-user-input";
+import { UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "./guard/auth.guard";
 
 @Resolver('User')
 export class UserResolver {
@@ -17,6 +19,7 @@ export class UserResolver {
         private userService: UserService,
     ) {}
 
+    // @UseGuards(JwtAuthGuard)
     @Query('userByEmail')
     async getUserByEmail(@Args('email') email: string) {
         return this.userService.getUserByEmail(email);
