@@ -5,7 +5,7 @@ type User {
   password: String!	
   phone: Int!
   address: String!
-  isProfessional: Boolean!
+  isProfessional: Boolean
 }
 
 type Job {

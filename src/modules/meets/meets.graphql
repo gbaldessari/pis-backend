@@ -17,22 +17,53 @@ type Job {
   requestsCount: Int!
 }
 
-input CreateMeetInput {
-  # Example field (placeholder)
-  exampleField: Int
+type Category {
+  id: Int!
+  categoryName: String!
 }
 
-input UpdateMeetInput {
+type User {
   id: Int!
+  username: String!
+  email: String!
+  password: String!	
+  phone: Int!
+  address: String!
+  isProfessional: Boolean
+}
+
+type QueryMeetReturn {
+  data: Meet!
+  success: Boolean!
+}
+
+type RemoveMeetReturn {
+  message: String!
+  success: Boolean!
+}
+
+type DefaultMeetReturn {
+  data: Meet!
+  message: String!
+  success: Boolean!
+}
+
+input CreateMeetInput {
+  idJob: Int!
+  idProfessional: Int!
+  idUser: Int!
+  meetDate: String!
+  startTime: String!
+  endTime: String!
 }
 
 type Query {
   meets: [Meet]!
-  meet(id: Int!): Meet
+  meet(id: Int!): QueryMeetReturn!
 }
 
 type Mutation {
-  createMeet(createMeetInput: CreateMeetInput!): Meet!
-  updateMeet(updateMeetInput: UpdateMeetInput!): Meet!
-  removeMeet(id: Int!): Meet
+  createMeet(createMeetInput: CreateMeetInput!): DefaultMeetReturn!
+  finishMeet(id: String!): DefaultMeetReturn!
+  removeMeet(id: Int!): RemoveMeetReturn!
 }

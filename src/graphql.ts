@@ -27,11 +27,12 @@ export interface UpdateJobInput {
 }
 
 export interface CreateMeetInput {
-    exampleField?: Nullable<number>;
-}
-
-export interface UpdateMeetInput {
-    id: number;
+    idJob: number;
+    idProfessional: number;
+    idUser: number;
+    meetDate: string;
+    startTime: string;
+    endTime: string;
 }
 
 export interface UserInput {
@@ -41,6 +42,7 @@ export interface UserInput {
     password: string;
     phone: number;
     address: string;
+    isProfessional?: Nullable<boolean>;
 }
 
 export interface RegisterInput {
@@ -94,7 +96,7 @@ export interface User {
     password: string;
     phone: number;
     address: string;
-    isProfessional: boolean;
+    isProfessional?: Nullable<boolean>;
 }
 
 export interface Category {
@@ -102,56 +104,74 @@ export interface Category {
     categoryName: string;
 }
 
-export interface CreateJobReturn {
-    job: Job;
-    message: string;
+export interface QueryReturnJob {
+    data: Job;
+    success: boolean;
 }
 
-export interface UpdateJobReturn {
-    job: Job;
-    message: string;
+export interface QueryCategoryReturn {
+    data: Category;
+    success: boolean;
 }
 
-export interface RemoveJobReturn {
+export interface QueryByCategoryReturn {
+    data: Nullable<Job>[];
     message: string;
+    success: boolean;
 }
 
-export interface CreateCategoryReturn {
-    category: Category;
+export interface DefaultReturn {
+    data: string;
     message: string;
+    success: boolean;
+}
+
+export interface DefaultCategoryReturn {
+    data: string;
+    message: string;
+    success: boolean;
+}
+
+export interface RemoveReturn {
+    message: string;
+    success: boolean;
 }
 
 export interface IQuery {
     jobs(): Nullable<Job>[] | Promise<Nullable<Job>[]>;
-    jobByName(name: string): Nullable<Job> | Promise<Nullable<Job>>;
-    jobByCategory(category: string): Nullable<Job> | Promise<Nullable<Job>>;
-    jobById(id: number): Nullable<Job> | Promise<Nullable<Job>>;
+    jobByName(name: string): QueryReturnJob | Promise<QueryReturnJob>;
+    jobByCategory(category: string): QueryByCategoryReturn | Promise<QueryByCategoryReturn>;
+    jobById(id: number): QueryReturnJob | Promise<QueryReturnJob>;
     categories(): Nullable<Category>[] | Promise<Nullable<Category>[]>;
-    categoryById(id: number): Nullable<Category> | Promise<Nullable<Category>>;
-    categoryByName(name: string): Nullable<Category> | Promise<Nullable<Category>>;
+    categoryById(id: number): QueryCategoryReturn | Promise<QueryCategoryReturn>;
+    categoryByName(name: string): QueryCategoryReturn | Promise<QueryCategoryReturn>;
     meets(): Nullable<Meet>[] | Promise<Nullable<Meet>[]>;
-    meet(id: number): Nullable<Meet> | Promise<Nullable<Meet>>;
+    meet(id: number): QueryMeetReturn | Promise<QueryMeetReturn>;
     users(): Nullable<User>[] | Promise<Nullable<User>[]>;
-    userByEmail(email: string): Nullable<User> | Promise<Nullable<User>>;
-    userById(id: number): Nullable<User> | Promise<Nullable<User>>;
-    userMeetByDate(id: number, date: string): boolean | Promise<boolean>;
+    userByEmail(email: string): QueryReturn | Promise<QueryReturn>;
+    userById(id: number): QueryReturn | Promise<QueryReturn>;
+    userMeetByDate(id: number, date: string): DefaultReturn | Promise<DefaultReturn>;
+    totalSalesGenerated(id: number): CalcReturn | Promise<CalcReturn>;
+    totalSalesMonth(id: number): CalcReturn | Promise<CalcReturn>;
+    fiveFavoritesJobs(id: number): Nullable<Job>[] | Promise<Nullable<Job>[]>;
+    getAvailableTimes(id: number, date: string): Nullable<string>[] | Promise<Nullable<string>[]>;
     sendUserRecovery(user: UserInput): MailReturn | Promise<MailReturn>;
 }
 
 export interface IMutation {
-    createJob(createJobInput: CreateJobInput): CreateJobReturn | Promise<CreateJobReturn>;
-    updateJob(jobName: string, updateJobInput: UpdateJobInput): UpdateJobReturn | Promise<UpdateJobReturn>;
-    removeJob(id: number): RemoveJobReturn | Promise<RemoveJobReturn>;
-    createCategory(createCategoryInput: CreateCategoryinput): CreateCategoryReturn | Promise<CreateCategoryReturn>;
-    createMeet(createMeetInput: CreateMeetInput): Meet | Promise<Meet>;
-    updateMeet(updateMeetInput: UpdateMeetInput): Meet | Promise<Meet>;
-    removeMeet(id: number): Nullable<Meet> | Promise<Nullable<Meet>>;
-    register(registerInput: RegisterInput): RegisterReturn | Promise<RegisterReturn>;
+    createJob(createJobInput: CreateJobInput): DefaultReturn | Promise<DefaultReturn>;
+    updateJob(jobName: string, updateJobInput: UpdateJobInput): DefaultReturn | Promise<DefaultReturn>;
+    removeJob(id: number): RemoveReturn | Promise<RemoveReturn>;
+    createCategory(createCategoryInput: CreateCategoryinput): DefaultCategoryReturn | Promise<DefaultCategoryReturn>;
+    createMeet(createMeetInput: CreateMeetInput): DefaultMeetReturn | Promise<DefaultMeetReturn>;
+    finishMeet(id: string): DefaultMeetReturn | Promise<DefaultMeetReturn>;
+    removeMeet(id: number): RemoveMeetReturn | Promise<RemoveMeetReturn>;
+    register(registerInput: RegisterInput): DefaultReturn | Promise<DefaultReturn>;
     login(loginInput: LoginInput): LoginReturn | Promise<LoginReturn>;
-    createUserSettings(userSettingsInput: UserSettingsInput): UserSettings | Promise<UserSettings>;
-    editUser(email: string, editUserInput: EditUserInput): User | Promise<User>;
-    requestPasswordReset(email: string): ResetPasswordReturn | Promise<ResetPasswordReturn>;
-    resetPassword(resetPasswordInput: ResetPasswordInput): ResetPasswordReturn | Promise<ResetPasswordReturn>;
+    editUser(email: string, editUserInput: EditUserInput): DefaultReturn | Promise<DefaultReturn>;
+    requestPasswordReset(email: string): DefaultReturn | Promise<DefaultReturn>;
+    resetPassword(resetPasswordInput: ResetPasswordInput): DefaultReturn | Promise<DefaultReturn>;
+    createUserSettings(userSettingsInput: UserSettingsInput): DefaultReturn | Promise<DefaultReturn>;
 }
 
 export interface Meet {
@@ -163,25 +183,48 @@ export interface Meet {
     startTime: string;
 }
 
+export interface QueryMeetReturn {
+    data: Meet;
+    success: boolean;
+}
+
+export interface RemoveMeetReturn {
+    message: string;
+    success: boolean;
+}
+
+export interface DefaultMeetReturn {
+    data: Meet;
+    message: string;
+    success: boolean;
+}
+
 export interface UserSettings {
     userID: number;
     receiveEmails: boolean;
     receiveNotifications: boolean;
 }
 
-export interface LoginReturn {
-    email: string;
+export interface DataLoginReturn {
     token: string;
+    email: string;
 }
 
-export interface RegisterReturn {
-    user: User;
+export interface LoginReturn {
+    data: DataLoginReturn;
     message: string;
+    success: boolean;
 }
 
-export interface ResetPasswordReturn {
-    message: string;
+export interface QueryReturn {
     data: User;
+    success: boolean;
+}
+
+export interface CalcReturn {
+    data: number;
+    message: string;
+    success: boolean;
 }
 
 export interface MailReturn {

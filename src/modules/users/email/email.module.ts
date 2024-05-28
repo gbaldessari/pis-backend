@@ -11,7 +11,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
         host: 'smtp.gmail.com',
         auth: {
           user: 'testres3tpassw0rd@gmail.com',
-          pass: 'obtx psev weus suui',
+          pass: process.env.SECRET_MAILER || 'obtx psev weus suui',
         },
       },
       defaults: {

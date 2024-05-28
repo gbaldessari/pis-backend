@@ -12,6 +12,11 @@ export class MeetsResolver {
   async getMeets() {
     return await this.meetsService.getMeets();
   }
+  
+  @Query('meet')
+  async getMeetById(@Args('id') id: number) {
+    return this.meetsService.getMeetById(id);
+  }
 
   @Mutation('createMeet')
   async createMeet(@Args('createMeetInput') createMeetInput: CreateMeetInput) {
@@ -21,11 +26,6 @@ export class MeetsResolver {
   @Mutation('finishMeet')
   async finishMeet(@Args('id') id: number) {
     return await this.meetsService.finishMeet(id);
-  }
-
-  @Query('meet')
-  async getMeetById(@Args('id') id: number) {
-    return this.meetsService.getMeetById(id);
   }
 
   @Mutation('removeMeet')
