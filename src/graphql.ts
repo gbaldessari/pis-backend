@@ -26,6 +26,13 @@ export interface UpdateJobInput {
     idProfessional?: Nullable<number>;
 }
 
+export interface CreateReviewInput {
+    comment: string;
+    rate: number;
+    idJob: number;
+    idUser: number;
+}
+
 export interface CreateMeetInput {
     idJob: number;
     idProfessional: number;
@@ -89,6 +96,14 @@ export interface Job {
     requestsCount: number;
 }
 
+export interface Review {
+    id: number;
+    comment: string;
+    rate: number;
+    idJob: Job;
+    idUser: User;
+}
+
 export interface User {
     id: number;
     username: string;
@@ -120,8 +135,19 @@ export interface QueryByCategoryReturn {
     success: boolean;
 }
 
+export interface ExistReviewReturn {
+    message: string;
+    success: boolean;
+}
+
 export interface DefaultReturn {
     data: string;
+    message: string;
+    success: boolean;
+}
+
+export interface DefaultReviewReturn {
+    data: Review;
     message: string;
     success: boolean;
 }
@@ -145,6 +171,9 @@ export interface IQuery {
     categories(): Nullable<Category>[] | Promise<Nullable<Category>[]>;
     categoryById(id: number): QueryCategoryReturn | Promise<QueryCategoryReturn>;
     categoryByName(name: string): QueryCategoryReturn | Promise<QueryCategoryReturn>;
+    existReview(idJob: number, idUser: number): ExistReviewReturn | Promise<ExistReviewReturn>;
+    getReviewById(id: number): DefaultReviewReturn | Promise<DefaultReviewReturn>;
+    reviews(): Nullable<Review>[] | Promise<Nullable<Review>[]>;
     meets(): Nullable<Meet>[] | Promise<Nullable<Meet>[]>;
     meet(id: number): QueryMeetReturn | Promise<QueryMeetReturn>;
     users(): Nullable<User>[] | Promise<Nullable<User>[]>;
@@ -163,6 +192,7 @@ export interface IMutation {
     updateJob(jobName: string, updateJobInput: UpdateJobInput): DefaultReturn | Promise<DefaultReturn>;
     removeJob(id: number): RemoveReturn | Promise<RemoveReturn>;
     createCategory(createCategoryInput: CreateCategoryinput): DefaultCategoryReturn | Promise<DefaultCategoryReturn>;
+    createReview(createReviewInput: CreateReviewInput): DefaultReviewReturn | Promise<DefaultReviewReturn>;
     createMeet(createMeetInput: CreateMeetInput): DefaultMeetReturn | Promise<DefaultMeetReturn>;
     finishMeet(id: string): DefaultMeetReturn | Promise<DefaultMeetReturn>;
     removeMeet(id: number): RemoveMeetReturn | Promise<RemoveMeetReturn>;

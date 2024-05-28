@@ -16,5 +16,4 @@ export class Category {
 
     @OneToMany(() => Job, job => job.idCategory)
     jobs: Job[]; 
-
-}   
+}

@@ -10,6 +10,7 @@ import {
 import { User } from "src/modules/users/entities/user.entity";
 import { Category } from "./category.entity";
 import { Meet } from "src/modules/meets/entities/meet.entity";
+import { Review } from "./review.entity";
 
 @Entity({ name: "jobs" })
 @ObjectType()
@@ -51,5 +52,8 @@ export class Job {
 
     @OneToMany(() => Meet, meet => meet.idJob)
     meets: Meet[];
+
+    @OneToMany(() => Review, review => review.job)
+    reviews: Review[];
 
 }

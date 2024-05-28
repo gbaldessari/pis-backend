@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { Job } from "src/modules/jobs/entities/job.entity";
 import { Meet } from "src/modules/meets/entities/meet.entity";
+import { Review } from "src/modules/jobs/entities/review.entity";
 
 @Entity({ name: "users" })
 @ObjectType()
@@ -65,4 +66,6 @@ export class User {
     @OneToMany(() => Meet, meet => meet.idUser)
     userMeets: Meet[];
 
+    @OneToMany(() => Review, review => review.user)
+    reviews: Review[];
 }

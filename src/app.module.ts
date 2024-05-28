@@ -6,6 +6,7 @@ import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { EmailModule } from './modules/users/email/email.module';
 import { JobsModule } from './modules/jobs/jobs.module';
 import { MeetsModule } from './modules/meets/meets.module';
+import { ReviewModule } from './modules/jobs/review/review.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MeetsModule } from './modules/meets/meets.module';
     UsersModule,
     JobsModule,
     MeetsModule,
+    ReviewModule
   ],
   controllers: [],
   providers: [],

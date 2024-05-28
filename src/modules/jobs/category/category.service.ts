@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Category } from '../entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { CreateCategoryInput } from '../dto/create-category-input';
-import { Connection, EntityManager } from 'typeorm';
+import { Connection, EntityManager, Repository } from 'typeorm';
 import { HttpStatus } from '@nestjs/common';
 
 @Injectable()

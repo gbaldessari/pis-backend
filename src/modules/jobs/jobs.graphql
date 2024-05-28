@@ -8,6 +8,14 @@ type Job {
   requestsCount: Int!
 }
 
+type Review {
+  id: Int!
+  comment: String!
+  rate: Int!
+  idJob: Job!
+  idUser: User!
+}
+
 type User {
   id: Int!
   username: String!
@@ -38,8 +46,19 @@ type QueryByCategoryReturn {
   success: Boolean!
 }
 
+type ExistReviewReturn {
+  message: String!
+  success: Boolean!
+}
+
 type DefaultReturn {
   data: String!
+  message: String!
+  success: Boolean!
+}
+
+type DefaultReviewReturn {
+  data: Review!
   message: String!
   success: Boolean!
 }
@@ -74,6 +93,13 @@ input UpdateJobInput {
   idProfessional: Int
 }
 
+input CreateReviewInput {
+  comment: String!
+  rate: Int!
+  idJob: Int!
+  idUser: Int!
+}
+
 type Query {
   jobs: [Job]!
   jobByName(name: String!): QueryReturnJob!
@@ -82,6 +108,9 @@ type Query {
   categories: [Category]!
   categoryById(id: Int!): QueryCategoryReturn!
   categoryByName(name: String!): QueryCategoryReturn!
+  existReview(idJob: Int!, idUser: Int!): ExistReviewReturn!
+  getReviewById(id: Int!): DefaultReviewReturn!
+  reviews: [Review]!
 }
 
 type Mutation {
@@ -89,4 +118,5 @@ type Mutation {
   updateJob(jobName: String!, updateJobInput: UpdateJobInput!): DefaultReturn!
   removeJob(id: Int!): RemoveReturn!
   createCategory(createCategoryInput: CreateCategoryinput!): DefaultCategoryReturn!
+  createReview(createReviewInput: CreateReviewInput!): DefaultReviewReturn!
 }
