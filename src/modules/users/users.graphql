@@ -57,6 +57,13 @@ type MailReturn {
   message: String!
 }
 
+type ReturnPayload {
+  id: Int!
+  email: String!
+  iat: Int!
+  exp: Int!
+}
+
 input UserInput {
   id: Int!
   username: String!
@@ -120,4 +127,5 @@ type Mutation {
   requestPasswordReset(email: String!): DefaultReturn!
   resetPassword(resetPasswordInput: ResetPasswordInput!): DefaultReturn! 
   createUserSettings(userSettingsInput: UserSettingsInput!): DefaultReturn!
+  verifyToken: ReturnPayload!
 }

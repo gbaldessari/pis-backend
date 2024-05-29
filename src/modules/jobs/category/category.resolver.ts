@@ -9,8 +9,8 @@ export class CategoryResolver {
     ) {}
 
     @Query('categories')
-    getCategories() {
-        return this.categoryService.getCategories();
+   async  getCategories() {
+        return await this.categoryService.getCategories();
     }
 
     @Query('categoryById')
@@ -29,5 +29,7 @@ export class CategoryResolver {
     ){
         return this.categoryService.createCategory(createCategoryInput);
     }
+
+    
 
 }

@@ -14,17 +14,7 @@ export class CategoryService {
     ) {}
 
     async getCategories(){
-        try {
-            return {
-                data: await this.categoryRepository.find(),
-                success: true
-            } 
-        } catch(e) {
-            return {
-                data: null,
-                success: false
-            }
-        }
+        return await this.categoryRepository.find();
     }
 
     async getById(id:number){

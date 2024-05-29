@@ -72,7 +72,7 @@ export class UserService {
         success: false
       };
 
-      const payload = { email: findUser.email, username: findUser.username };
+      const payload = { id: findUser.id, email: findUser.email };
       const access_token = this.jwtService.sign(payload);
 
       return {

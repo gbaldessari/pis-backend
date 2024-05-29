@@ -202,6 +202,7 @@ export interface IMutation {
     requestPasswordReset(email: string): DefaultReturn | Promise<DefaultReturn>;
     resetPassword(resetPasswordInput: ResetPasswordInput): DefaultReturn | Promise<DefaultReturn>;
     createUserSettings(userSettingsInput: UserSettingsInput): DefaultReturn | Promise<DefaultReturn>;
+    verifyToken(): ReturnPayload | Promise<ReturnPayload>;
 }
 
 export interface Meet {
@@ -259,6 +260,13 @@ export interface CalcReturn {
 
 export interface MailReturn {
     message: string;
+}
+
+export interface ReturnPayload {
+    id: number;
+    email: string;
+    iat: number;
+    exp: number;
 }
 
 type Nullable<T> = T | null;

@@ -4,6 +4,7 @@ import {
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
   
@@ -12,13 +13,15 @@ export class JwtAuthGuard implements CanActivate {
     constructor(private jwtService: JwtService) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const request = context.switchToHttp().getRequest();
+        const ctx = GqlExecutionContext.create(context);
+        const request = ctx.getContext().req;
         const token = this.extractTokenFromHeader(request);
+
         if (!token) throw new UnauthorizedException();
         try {
             const payload = await this.jwtService.verifyAsync(
                 token,
-                {secret: process.env.SECRET_JWT}
+                {secret: process.env.JWT_SECRET}
             );
             request['user'] = payload;
         } catch {
@@ -27,7 +30,10 @@ export class JwtAuthGuard implements CanActivate {
         return true;
     }
 
-    private extractTokenFromHeader(request: Request): string | undefined {
+    private extractTokenFromHeader(request: any): string | undefined {
+        if (!request || !request.headers || !request.headers.authorization) {
+            return null;
+        }
         const [type, token] = request.headers.authorization?.split(' ') ?? [];
         return type === 'Bearer' ? token : undefined;
     }
