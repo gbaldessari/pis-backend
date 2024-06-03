@@ -10,7 +10,7 @@ import { UserService } from "./users.service";
 import { LoginInput } from "./dto/login-input";
 import { ResetPasswordInput } from "./dto/reset-password-input";
 import { EditUserInput } from "./dto/edit-user-input";
-import { UseGuards, Request } from "@nestjs/common";
+import { UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "./guard/auth.guard";
 
 @Resolver('User')

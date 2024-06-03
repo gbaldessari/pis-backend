@@ -7,6 +7,7 @@ import { EmailModule } from './modules/users/email/email.module';
 import { JobsModule } from './modules/jobs/jobs.module';
 import { MeetsModule } from './modules/meets/meets.module';
 import { ReviewModule } from './modules/jobs/review/review.module';
+import { SocketModule } from './modules/socket/socket.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { ReviewModule } from './modules/jobs/review/review.module';
     UsersModule,
     JobsModule,
     MeetsModule,
-    ReviewModule
+    ReviewModule,
+    SocketModule
   ],
   controllers: [],
   providers: [],
