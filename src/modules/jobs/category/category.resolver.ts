@@ -9,27 +9,41 @@ export class CategoryResolver {
     ) {}
 
     @Query('categories')
-   async  getCategories() {
-        return await this.categoryService.getCategories();
+    async  getCategories() {
+        try {
+            return await this.categoryService.getCategories();
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Query('categoryById')
-    getById(@Args('id') id:number){
-        return this.categoryService.getById(id);
+    async getById(@Args('id') id:number){
+        try {
+            return await this.categoryService.getById(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Query('categoryByName')
-    getByName(@Args('name') name: string){
-        return this.categoryService.getByName(name);
+    async getByName(@Args('name') name: string){
+        try {
+            return await this.categoryService.getByName(name);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Mutation('createCategory')
-    createCategory(
+    async createCategory(
         @Args('createCategoryInput') createCategoryInput:CreateCategoryInput
     ){
-        return this.categoryService.createCategory(createCategoryInput);
+        try {
+            return await this.categoryService.createCategory(createCategoryInput);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
-
     
-
 }

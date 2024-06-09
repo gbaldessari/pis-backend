@@ -36,7 +36,7 @@ export class UserService {
     }
   }
 
-  async getUserById(id:number){
+  async getUserById(id: number){
     try {
       return {
         data: await this.userRepository.findOneBy({id}),
@@ -51,7 +51,7 @@ export class UserService {
   }
 
   async getUsers() {
-    return this.userRepository.find({ relations: ['settings'] });
+    return this.userRepository.find();
   }
 
   async login(loginInput: LoginInput) {
@@ -60,19 +60,23 @@ export class UserService {
       const findUser: User = (await this.getUserByEmail(email)).data;
 
       if (!findUser) return {
-        data: {token: null, email: null},
+        data: null,
         message: 'Usuario no encontrado',
         success: false
       };
 
       const passwordMatch = await compare(password, findUser.password);
       if (!passwordMatch) return {
-        data: {token: null, email: null},
+        data: null,
         message: 'Contraseña incorrecta',
         success: false
       };
 
-      const payload = { id: findUser.id, email: findUser.email };
+      const payload = { 
+        id: findUser.id, 
+        email: findUser.email,
+        isProfessional: findUser.isProfessional
+      };
       const access_token = this.jwtService.sign(payload);
 
       return {
@@ -121,11 +125,11 @@ export class UserService {
     };
   }
 
-  async updateByEmail(email: string, editUserInput: EditUserInput) {
-    const user: User = (await this.getUserByEmail(email)).data;
+  async updateUser(id: number, editUserInput: EditUserInput) {
+    const user: User = (await this.getUserById(id)).data;
 
     if (!user) return {
-      data: null,
+      data: "",
       message: 'Usuario no encontrado',
       success: false
     };
@@ -181,7 +185,7 @@ export class UserService {
 
       if (findUser.resetPasswordToken == resetPasswordToken) {
         const hashPassword = await hash(password, 10);
-        this.updateByEmail(email, {
+        this.updateUser(findUser.id, {
           resetPasswordToken: null,
           password: hashPassword,
         });
@@ -202,9 +206,11 @@ export class UserService {
   }
 
   async getUserMeetByDate(id: number, date: string) {
-    const user: User = (await this.getUserById(id)).data;
+    const user: User = await this.userRepository.findOne({ 
+      where: {id},  relations: ['professionalMeets', 'userMeets'] 
+    });
+
     if (!user) return {
-      data: null,
       message: 'Usuario no encontrado',
       success: false,
     }
@@ -216,38 +222,43 @@ export class UserService {
         (meet) => meet.startTime === date);
 
       if (existDate && existTimeStart) return {
-        data: null,
         message: 'Ya existe una cita en esa fecha',
         success: false,
       };
     } else {
-      const existDate = user.userMeets.find((meet) => meet.meetDate === date);
-      const existTimeStart = user.userMeets.find((meet) => meet.startTime === date);
+      const existDate = user.userMeets
+      .find((meet) => meet.meetDate === date);
+
+      const existTimeStart = user.userMeets
+      .find((meet) => meet.startTime === date);
 
       if (existDate && existTimeStart) return {
-        data: null,
         message: 'Ya existe una cita en esa fecha',
         success: false,
       };
     }
 
     return {
-      data: user.email,
       message: 'Fecha disponible',
       success: true,
     };
   }
 
   async getTotalSalesGenerated(id: number){
-    const findProfessional: User = (await this.getUserById(id)).data;
+    const findProfessional = await this.userRepository.findOne(
+      {where: {id}, relations: ['professionalMeets','professionalMeets.idJob']}
+    );
+
     if (!findProfessional || !findProfessional.isProfessional) return {
       data: null,
       message: 'Error al encontrar usuario profesional',
       success: false,
     }
-    
-    const totalSales = findProfessional.professionalMeets.reduce(
-      (acc, meet) => acc + meet.idJob.price, 0);
+
+    const totalSales = findProfessional.professionalMeets
+    .filter(meet => meet.isDone)
+    .reduce((acc, meet) => acc + meet.idJob.price, 0);
+
     return {
       data: totalSales,
       message: 'Calculo exitoso',
@@ -256,7 +267,10 @@ export class UserService {
   }
 
   async getTotalSalesMonth(id: number){
-    const findProfessional: User = (await this.getUserById(id)).data;
+    const findProfessional = await this.userRepository.findOne(
+      {where: {id}, relations: ['professionalMeets','professionalMeets.idJob']}
+    );
+      
     if (!findProfessional || !findProfessional.isProfessional) return {
       data: null,
       message: 'Error al encontrar usuario profesional',
@@ -282,9 +296,11 @@ export class UserService {
   }
 
   async getFiveFavoritesJobs(id: number){
-    const findProfessional: User = (await this.getUserById(id)).data;
+    const findProfessional = await this.userRepository.findOne(
+      {where: {id}, relations: ['jobs']});
+
     if (!findProfessional || !findProfessional.isProfessional) return {
-      data: null,
+      data: [],
       message: 'Error al encontrar usuario profesional',
       success: false,
     }
@@ -301,7 +317,9 @@ export class UserService {
   }
 
   async showAvailableTimes(id: number, date: string){
-    const findProfessional: User = (await this.getUserById(id)).data;
+    const findProfessional = await this.userRepository.findOne(
+      {where: {id}, relations: ['professionalMeets']});
+
     if (!findProfessional || !findProfessional.isProfessional) return {
       data: null,
       message: 'Error al encontrar usuario profesional',

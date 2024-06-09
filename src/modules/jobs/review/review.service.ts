@@ -38,14 +38,22 @@ export class ReviewService {
         }
     }
 
-    async existReview(idJob: number, idUser: number) {
-        const job: Job = (await this.jobService.getById(idJob)).data;
-        const user: User = (await this.userService.getUserById(idUser)).data;
-        const existJob = this.reviewRepository.findOneBy({job});
-        const existUser = this.reviewRepository.findOneBy({user});
-        if(existJob && existUser) {
+    async existReview(id: number, idJob: number) {
+        const job: Job = (
+            await this.jobService.getById(idJob)
+        ).data;
+
+        const user: User = (
+            await this.userService.getUserById(id)
+        ).data;
+
+        const existJob = await this.reviewRepository.findOneBy({job});
+
+        const existUser = await this.reviewRepository.findOneBy({user});
+
+        if(existJob === existUser) {
             return {
-                message: 'Review ya existe',
+                message: 'Review encontrada',
                 success: true
             }
         } else {        
@@ -56,22 +64,34 @@ export class ReviewService {
         }
     }
 
-    async createReview(createReviewInput: CreateReviewInput) {
-        const job: Job = (await this.jobService.getById(createReviewInput.idJob)).data;
+    async createReview(id: number, createReviewInput: CreateReviewInput) {
+        const job: Job = (
+            await this.jobService.getById(createReviewInput.idJob)
+        ).data;
+
         if (!job) return {
             data: null,
             message: 'Trabajo no encontrado',
             success: false
         }
 
-        const user: User = (await this.userService.getUserById(createReviewInput.idUser)).data;
+        const user: User = (
+            await this.userService.getUserById(id)
+        ).data;
+
         if (!user) return {
             data: null,
             message: 'Usuario no encontrado',
             success: false
         }
 
-        if ((await this.existReview(job.id, user.id)).success) return {
+        if (job.idProfessional.id === user.id) return {
+            data: null,
+            message: 'No puedes hacer review a tu propio trabajo',
+            success: false
+        }
+
+        if ((await this.existReview(id, job.id)).success) return {
             data: null,
             message: 'Review de este usuario ya existe',
             success: false
@@ -80,7 +100,8 @@ export class ReviewService {
         const reviewInput = {
             comment: createReviewInput.comment,
             rate: createReviewInput.rate,
-            job: job
+            job: job,
+            user: user
         }
 
         let review: Review;
@@ -100,5 +121,19 @@ export class ReviewService {
             message: 'Review creada',
             success: true
         } 
+    }
+
+    async removeReview(id: number) {
+        const review = await this.getById(id);
+        if (!review.success) return {
+            message: 'Review no encontrada',
+            success: false
+        }
+
+        await this.reviewRepository.remove(review.data);
+        return {
+            message: 'Review eliminada',
+            success: true
+        }
     }
 }

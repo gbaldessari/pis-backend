@@ -1,6 +1,9 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { MeetsService } from './meets.service';
 import { CreateMeetInput } from './dto/create-meet.input';
+import { Context } from '@nestjs/graphql';
+import { JwtAuthGuard } from '../users/guard/auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver('Meet')
 export class MeetsResolver {
@@ -8,28 +11,61 @@ export class MeetsResolver {
     private readonly meetsService: MeetsService
   ) {}
   
+  @UseGuards(JwtAuthGuard)
   @Query('meets')
   async getMeets() {
-    return await this.meetsService.getMeets();
+    try {
+      return await this.meetsService.getMeets();
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
   
+  @UseGuards(JwtAuthGuard)
   @Query('meet')
   async getMeetById(@Args('id') id: number) {
-    return this.meetsService.getMeetById(id);
+    try {
+      return await this.meetsService.getMeetById(id);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation('createMeet')
-  async createMeet(@Args('createMeetInput') createMeetInput: CreateMeetInput) {
-    return await this.meetsService.createMeet(createMeetInput);
+  async createMeet(
+    @Context() context: any,
+    @Args('createMeetInput') createMeetInput: CreateMeetInput
+  ) {
+    try {
+      const id: number = context.req.user.id;
+      return await this.meetsService.createMeet(id, createMeetInput);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
   
+  @UseGuards(JwtAuthGuard)
   @Mutation('finishMeet')
-  async finishMeet(@Args('id') id: number) {
-    return await this.meetsService.finishMeet(id);
+  async finishMeet(
+    @Context() context: any,
+    @Args('idMeet') idMeet: number
+  ) {
+    try {
+      const idProfessional: number = context.req.user.id;
+      return await this.meetsService.finishMeet(idProfessional, idMeet);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation('removeMeet')
   async removeMeet(@Args('id') id: number) {
-    return this.meetsService.removeMeet(id);
+    try {
+      return await this.meetsService.removeMeet(id);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 }

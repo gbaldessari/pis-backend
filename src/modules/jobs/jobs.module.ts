@@ -6,13 +6,12 @@ import { Job } from './entities/job.entity';
 import { CategoryModule } from './category/category.module';
 import { UsersModule } from '../users/users.module';
 import { Category } from './entities/category.entity';
-import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Job, Category]),
     UsersModule,
-    CategoryModule,
+    CategoryModule
   ],
   providers: [JobsResolver, JobsService],
   exports: [JobsService]

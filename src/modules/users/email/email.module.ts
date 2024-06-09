@@ -1,6 +1,5 @@
 import { Global, Module } from '@nestjs/common';
 import { EmailService } from './email.service';
-import { EmailResolver } from './email.resolver';
 import { MailerModule } from '@nestjs-modules/mailer';
 
 @Global()
@@ -19,7 +18,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       },
     }),
   ],
-  providers: [EmailService, EmailResolver],
+  providers: [EmailService],
   exports: [EmailService]
 })
 export class EmailModule {}

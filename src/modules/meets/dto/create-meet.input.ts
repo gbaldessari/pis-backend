@@ -5,12 +5,6 @@ export class CreateMeetInput {
     
     @Field()
     idJob: number;
-    
-    @Field()
-    idProfessional: number;
-
-    @Field()
-    idUser:number;
 
     @Field()
     meetDate:string;

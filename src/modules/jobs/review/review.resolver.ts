@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ReviewService } from "./review.service";
 import { CreateReviewInput } from "../dto/create-review-input";
+import { Context } from "@nestjs/graphql";
 
 @Resolver('review')
 export class ReviewResolver {
@@ -10,22 +11,55 @@ export class ReviewResolver {
 
     @Query('getReviewById')
     async getById(@Args('id') id: number) {
-        return this.reviewService.getById(id);
+        try {
+            return await this.reviewService.getById(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Query('reviews')
     async getReviews() {
-        return this.reviewService.getReviews();
+        try {
+            return await this.reviewService.getReviews();
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Query('existReview')
-    async existReview(@Args('idJob') idJob: number, @Args('idUser') idUser: number) {
-        return this.reviewService.existReview(idJob, idUser);
+    async existReview(
+        @Context() context: any,
+        @Args('idJob') idJob: number
+    ) {
+        try {
+            const id: number = context.req.user.id;
+            return await this.reviewService.existReview(id, idJob);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Mutation('createReview')
-    async createReview(@Args('createReviewInput') createReviewInput: CreateReviewInput){
-        return this.reviewService.createReview(createReviewInput);
+    async createReview(
+        @Context() context: any,
+        @Args('createReviewInput') createReviewInput: CreateReviewInput
+    ){
+        try {
+            const id: number = context.req.user.id;
+            return await this.reviewService.createReview(id, createReviewInput);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
+    }
+
+    @Mutation('removeReview')
+    async removeReview(@Args('id') id: number) {
+        try {
+            return await this.reviewService.removeReview(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
 }

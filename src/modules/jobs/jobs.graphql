@@ -6,6 +6,7 @@ type Job {
   idCategory: Category!
   idProfessional: User!
   requestsCount: Int!
+  price: Int!
 }
 
 type Review {
@@ -31,17 +32,17 @@ type Category {
 }
 
 type QueryReturnJob {
-  data: Job!
+  data: Job
   success: Boolean!
 }
 
 type QueryCategoryReturn {
-  data: Category!
+  data: Category
   success: Boolean!
 }
 
 type QueryByCategoryReturn {
-  data: [Job]!
+  data: [Job]
   message: String!
   success: Boolean!
 }
@@ -52,19 +53,19 @@ type ExistReviewReturn {
 }
 
 type DefaultReturn {
-  data: String!
+  data: String
   message: String!
   success: Boolean!
 }
 
 type DefaultReviewReturn {
-  data: Review!
+  data: Review
   message: String!
   success: Boolean!
 }
 
 type DefaultCategoryReturn {
-  data: String!
+  data: String
   message: String!
   success: Boolean!
 
@@ -75,11 +76,17 @@ type RemoveReturn {
   success: Boolean!
 }
 
+type QueryReviewJob {
+  data: [Review]
+  message: String!
+  success: Boolean!
+}
+
 input CreateJobInput {
   jobName: String!
   description: String!
   idCategory: Int!
-  idProfessional: Int!
+  price: Int!
 }
 
 input CreateCategoryinput {
@@ -90,14 +97,14 @@ input UpdateJobInput {
   jobName: String
   description: String
   idCategory: Int
-  idProfessional: Int
+  requestsCount: Int
+  price: Int
 }
 
 input CreateReviewInput {
   comment: String!
   rate: Int!
   idJob: Int!
-  idUser: Int!
 }
 
 type Query {
@@ -108,9 +115,10 @@ type Query {
   categories: [Category]!
   categoryById(id: Int!): QueryCategoryReturn!
   categoryByName(name: String!): QueryCategoryReturn!
-  existReview(idJob: Int!, idUser: Int!): ExistReviewReturn!
+  existReview(idJob: Int!): ExistReviewReturn!
   getReviewById(id: Int!): DefaultReviewReturn!
   reviews: [Review]!
+  getReviewsByJob(idJob: Int!): QueryReviewJob!
 }
 
 type Mutation {
@@ -119,4 +127,5 @@ type Mutation {
   removeJob(id: Int!): RemoveReturn!
   createCategory(createCategoryInput: CreateCategoryinput!): DefaultCategoryReturn!
   createReview(createReviewInput: CreateReviewInput!): DefaultReviewReturn!
+  removeReview(id: Int!): RemoveReturn!
 }

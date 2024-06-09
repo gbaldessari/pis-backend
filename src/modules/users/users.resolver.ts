@@ -26,70 +26,113 @@ export class UserResolver {
         const req = context.req;
         return await req.user;
     }
-
-    @Query('userByEmail')
-    async getUserByEmail(@Args('email') email: string) {
-        return this.userService.getUserByEmail(email);
-    }
-
-    @Query('userById')
-    async getUserById(@Args('id') id:number){
-        return this.userService.getUserById(id);
-    }
-
+    
+    @UseGuards(JwtAuthGuard)
     @Query('users')
     async getUsers() {
-        return this.userService.getUsers();
+        try {
+            return await this.userService.getUsers();
+        } catch(e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
-    @Query('userMeetByDate')
-    async getUserMeetByDate(@Args('id') id:number, @Args('date') date: string){
-        return this.userService.getUserMeetByDate(id,date);
-    }
-
+    @UseGuards(JwtAuthGuard)
     @Query('totalSalesGenerated')
-    async getTotalSalesGenerated(@Args('id') id:number){
-        return this.userService.getTotalSalesGenerated(id);
+    async getTotalSalesGenerated(@Context() context: any){
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.getTotalSalesGenerated(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Query('totalSalesMonth')
-    async getTotalSalesMonth(@Args('id') id:number){
-        return this.userService.getTotalSalesMonth(id);
+    async getTotalSalesMonth(@Context() context: any){
+        const id: number = context.req.user.id;
+        try {
+            return await this.userService.getTotalSalesMonth(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
     }
+}
 
+    @UseGuards(JwtAuthGuard)
     @Query('fiveFavoritesJobs')
-    async getFiveFavoritesJobs(@Args('id') id:number){
-        return this.userService.getFiveFavoritesJobs(id);
+    async getFiveFavoritesJobs(@Context() context: any){
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.getFiveFavoritesJobs(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Query('getAvailableTimes')
-    async getAvailableTimes(@Args('id') id:number, @Args('date') date: string){
-        return this.userService.showAvailableTimes(id,date);
+    async getAvailableTimes(
+        @Context() context: any, 
+        @Args('date') date: string
+    ){
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.showAvailableTimes(id, date);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Mutation('login')
-    login(@Args('loginInput') loginInput: LoginInput) {
-        return this.userService.login(loginInput);
+    async login(@Args('loginInput') loginInput: LoginInput) {
+        try {
+            return await this.userService.login(loginInput);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Mutation('register')
-    registerUser(@Args('registerInput') registerInput: RegisterInput) {
-        return this.userService.register(registerInput);
+    async registerUser(@Args('registerInput') registerInput: RegisterInput) {
+        try {
+            return await this.userService.register(registerInput);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Mutation('editUser')
-    updateByEmail(@Args('email') email:string, @Args('editUserInput') editUserInput: EditUserInput) {
-        return this.userService.updateByEmail(email, editUserInput);
+    async updateUser(
+        @Context() context: any,
+        @Args('editUserInput') editUserInput: EditUserInput
+    ) {
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.updateUser(id, editUserInput);
+        } catch (e) { 
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Mutation('requestPasswordReset')
-    requestResetPassword(@Args('email') email:string){
-        return this.userService.requestResetPassword(email);
+    async requestResetPassword(@Args('email') email:string){
+        try {
+            return await this.userService.requestResetPassword(email);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
     @Mutation('resetPassword')
-    resetPassword(@Args('resetPasswordInput') resetPasswordInput: ResetPasswordInput){
-        return this.userService.resetPassword(resetPasswordInput);
+    async resetPassword(
+        @Args('resetPasswordInput') resetPasswordInput: ResetPasswordInput
+    ){
+        try {
+            return await this.userService.resetPassword(resetPasswordInput);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
     }
 
 }

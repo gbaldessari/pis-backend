@@ -48,7 +48,7 @@ export class CategoryService {
     async createCategory(createCategoryInput: CreateCategoryInput){
         const exist = await this.getByName(createCategoryInput.name)
 
-        if(exist) return {
+        if(exist.data) return {
             data: null,
             message: 'Categoria ya existe',
             success: false

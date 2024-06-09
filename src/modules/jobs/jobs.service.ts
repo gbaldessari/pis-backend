@@ -40,7 +40,10 @@ export class JobsService {
   async getById(id: number) {
     try {
       return {
-        data: await this.jobRepository.findOneBy({id}),
+        data: await this.jobRepository.findOne
+        ({
+          where: {id}, relations: ["idProfessional", "idCategory"] 
+        }),
         success: true
       } 
     } catch (e) {
@@ -52,7 +55,8 @@ export class JobsService {
   }
 
   async getByCategory(categoryName: string) {
-    const category: Category = (await this.categoryService.getByName(categoryName)).data;
+    const category: Category = (await this.categoryService
+      .getByName(categoryName)).data;
 
     if (!category) return {
       data: null,
@@ -79,14 +83,27 @@ export class JobsService {
     }
   }
 
-  async createJob(createJobInput: CreateJobInput) {
-    const existName = (await this.getByName(createJobInput.jobName)).data;
-    const category = (await this.categoryService.getById(createJobInput.idCategory)).data;
-    const existCategory = (await this.getByCategory(category.categoryName)).data.find(
-      job => job.jobName === createJobInput.jobName)
-    const professional = (await this.userService.getUserById(
-      createJobInput.idProfessional)).data;
+  async createJob(id: number, createJobInput: CreateJobInput) {
+    const existName = (
+      await this.getByName(createJobInput.jobName)
+    ).data;
 
+    const category = (
+      await this.categoryService.getById(createJobInput.idCategory)
+    ).data;
+
+    const existCategory = (
+      await this.getByCategory(category.categoryName)
+    ).data.find(
+      job => job.jobName === createJobInput.jobName);
+
+    const professional = (await this.userService.getUserById(id)).data;
+
+    if(!professional || !professional.isProfessional) return {
+      data: null,
+      message: 'Usuario no autorizado',
+      success: false
+    };
     if(existName) return {
       data: null,
       message: 'Ya existe un servicio con este nombre',
@@ -95,11 +112,6 @@ export class JobsService {
     if(!category) return {
       data: null,
       message: 'Categoria no existe',
-      success: false
-    };
-    if(!professional) return {
-      data: null,
-      message: 'Profesional no registrado',
       success: false
     };
     if(existCategory === existName) return {
@@ -114,6 +126,7 @@ export class JobsService {
       description: createJobInput.description,
       idCategory: category,
       idProfessional: professional,
+      price: createJobInput.price
     };
 
     let job: Job;
@@ -135,8 +148,10 @@ export class JobsService {
     }
   }
 
-  async updateJob(jobName: string, updateJobInput: UpdateJobInput) {
-    const job: Job = (await this.getByName(jobName)).data;
+  async updateJob(id: number, jobName: string, updateJobInput: UpdateJobInput) {
+    const job: Job = (
+      await this.getByName(jobName)
+    ).data;
 
     if (!job) return {
       data: null,
@@ -144,21 +159,24 @@ export class JobsService {
       success: false
     }
 
-    const existName = (await this.getByName(updateJobInput.jobName)).data;
-    const category = (await this.categoryService.getById(updateJobInput.idCategory)).data;
+    const existName = (
+      await this.getByName(updateJobInput.jobName)
+    ).data;
 
-    const existCategory =  (await this.getByCategory(category.categoryName)).data.find(
-        existName => existName.jobName === updateJobInput.jobName
-      );
+    const category = (
+      await this.categoryService.getById(updateJobInput.idCategory)
+    ).data;
 
-    const professional = (await this.userService.getUserById(
-      updateJobInput.idProfessional)).data;
+    const existCategory =  (
+      await this.getByCategory(category.categoryName)
+    ).data.find(
+      existName => existName.jobName === updateJobInput.jobName
+    );
 
-    if(existName) return {
-      data: null,
-      message: 'Ya existe un servicio con este nombre',
-      success: false
-    }
+    const professional = (
+      await this.userService.getUserById(id)
+    ).data;
+
     if(!category) return {
       data: null,
       message: 'Categoria no existe',
@@ -169,27 +187,21 @@ export class JobsService {
       message: 'Profesional no registrado',
       success: false
     }
-    if(existCategory === existName) return {
+    if(existCategory && existName && existCategory) return {
       data: null,
       message: 'Ya existe un servicio con este nombre en la categoría: '+
       category.categoryName,
       success: false
     }
 
-    const updateInput = {
-      jobName: updateJobInput.jobName !== undefined ? 
-        updateJobInput.jobName : job.jobName,
-      description: updateJobInput.description !== undefined ? 
-        updateJobInput.description : job.description,
-      idCategory: updateJobInput.idCategory !== undefined ? 
-        category : job.idCategory,
-      idProfessional: updateJobInput.idProfessional !== undefined ? 
-        professional : job.idProfessional
-    }
+    const updateInput: Job = await this.jobRepository.save
+    ({
+      ...job, ...updateJobInput,
+      idCategory: category ? category : job.idCategory,
+    });
 
-    await this.jobRepository.update(job.id,updateInput);
     return {
-      data: (await this.getById(job.id)).data.jobName,
+      data: updateInput.jobName,
       message: 'Servicio actualizado',
       success: true
     };
@@ -208,4 +220,23 @@ export class JobsService {
       success: true
     };
   }
+
+  async getReviews(id: number) {
+    const job: Job = await this.jobRepository.findOne(
+      {where: {id}, relations: ["reviews"]}
+    )
+
+    if (!job) return {
+      data: null,
+      message: 'Servicio no encontrado',
+      success: false
+    }
+
+    return {
+      data: job.reviews,
+      message: 'Reseñas encontradas',
+      success: true
+    }
+  }
+
 }

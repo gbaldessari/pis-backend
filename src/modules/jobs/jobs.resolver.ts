@@ -1,7 +1,9 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { JobsService } from './jobs.service';
 import { CreateJobInput } from './dto/create-job.input';
 import { UpdateJobInput } from './dto/update-job.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../users/guard/auth.guard';
 
 @Resolver('Job')
 export class JobsResolver {
@@ -9,38 +11,92 @@ export class JobsResolver {
     private jobsService: JobsService
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Query('jobs')
-  getJobs() {
-    return this.jobsService.getJobs();
+  async getJobs() {
+    try {
+      return await this.jobsService.getJobs();
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query('jobByName')
-  getByName(@Args('name') jobName: string) {
-    return this.jobsService.getByName(jobName);
+  async getByName(@Args('name') jobName: string) {
+    try {
+      return await this.jobsService.getByName(jobName);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query('jobByCategory')
-  getByCategory(@Args('category') categoryName: string) {
-    return this.jobsService.getByCategory(categoryName);
+  async getByCategory(@Args('category') categoryName: string) {
+    try {
+      return await this.jobsService.getByCategory(categoryName);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query('jobById')
-  getById(@Args('id') id: number) {
-    return this.jobsService.getById(id);
+  async getById(@Args('id') id: number) {
+    try {
+      return await this.jobsService.getById(id);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Query('getReviewsByJob')
+  async getReviewsByJob(@Args('id') id: number) {
+    try {
+      return await this.jobsService.getReviews(id);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Mutation('createJob')
-  createJob(@Args('createJobInput') createJobInput: CreateJobInput) {
-    return this.jobsService.createJob(createJobInput);
+  async createJob(
+    @Context() context: any,
+    @Args('createJobInput') createJobInput: CreateJobInput
+  ) {
+    try {
+      const id: number = context.req.user.id;
+      return await this.jobsService.createJob(id, createJobInput);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation('updateJob')
-  updateJob(@Args('jobName') jobName: string, @Args('updateJobInput') updateJobInput: UpdateJobInput) {
-    return this.jobsService.updateJob(jobName, updateJobInput);
+  async updateJob(
+    @Context() context: any,
+    @Args('jobName') jobName: string, 
+    @Args('updateJobInput') updateJobInput: UpdateJobInput
+  ) {
+    try {
+      const id: number = context.req.user.id;
+      return await this.jobsService.updateJob(id, jobName, updateJobInput);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation('removeJob')
-  removeJob(@Args('id') id: number) {
-    return this.jobsService.removeJob(id);
+  async removeJob(@Args('id') id: number) {
+    try {
+      return await this.jobsService.removeJob(id);
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
   }
 }

@@ -1,10 +1,11 @@
 type Meet {
   id: Int!
   idJob: Job!
-  idProfessional: User!
-  idClient: User!
+  idUser: User!
   meetDate: String!
   startTime: String!
+  endTime: String!
+  isDone: Boolean!
 }
 
 type Job {
@@ -33,7 +34,7 @@ type User {
 }
 
 type QueryMeetReturn {
-  data: Meet!
+  data: Meet
   success: Boolean!
 }
 
@@ -43,15 +44,13 @@ type RemoveMeetReturn {
 }
 
 type DefaultMeetReturn {
-  data: Meet!
+  data: Meet
   message: String!
   success: Boolean!
 }
 
 input CreateMeetInput {
   idJob: Int!
-  idProfessional: Int!
-  idUser: Int!
   meetDate: String!
   startTime: String!
   endTime: String!
@@ -64,6 +63,6 @@ type Query {
 
 type Mutation {
   createMeet(createMeetInput: CreateMeetInput!): DefaultMeetReturn!
-  finishMeet(id: String!): DefaultMeetReturn!
+  finishMeet(idMeet: Int!): DefaultMeetReturn!
   removeMeet(id: Int!): RemoveMeetReturn!
 }

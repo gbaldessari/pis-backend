@@ -17,4 +17,7 @@ export class EditUserInput {
 
     @Field({nullable: true})
     resetPasswordToken?: string;
+
+    @Field({nullable: true})
+    isProfessional?: boolean;
 }

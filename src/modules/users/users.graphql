@@ -18,14 +18,8 @@ type Job {
   requestsCount: Int!
 }
 
-type UserSettings {
-  userID: Int!
-  receiveEmails: Boolean!
-  receiveNotifications: Boolean!
-}
-
 type DefaultReturn {
-  data: String!
+  data: String
   message: String!
   success: Boolean!
 }
@@ -36,21 +30,15 @@ type DataLoginReturn {
 }
 
 type LoginReturn {
-  data: DataLoginReturn!
+  data: DataLoginReturn
   message: String!
-  success: Boolean!
-}
-
-type QueryReturn {
-  data: User!
   success: Boolean!
 }
 
 type CalcReturn {
-  data: Int!
+  data: Int
   message: String!
   success: Boolean!
-
 }
 
 type MailReturn {
@@ -64,14 +52,11 @@ type ReturnPayload {
   exp: Int!
 }
 
-input UserInput {
-  id: Int!
-  username: String!
-  email: String!
-  password: String!	
-  phone: Int!
-  address: String!
-  isProfessional: Boolean
+type ReturnFiveJobs{
+  data: [Job]!
+  message: String!
+  success: Boolean!
+
 }
 
 input RegisterInput {
@@ -100,6 +85,7 @@ input EditUserInput {
   password: String
   phone: Int
   address: String
+  isProfessional: Boolean
 }
 
 input ResetPasswordInput {
@@ -110,22 +96,17 @@ input ResetPasswordInput {
 
 type Query {
   users: [User]!
-  userByEmail(email: String!): QueryReturn!
-  userById(id: Int!): QueryReturn!
-  userMeetByDate(id: Int!, date: String!): DefaultReturn!
-  totalSalesGenerated(id: Int!): CalcReturn!
-  totalSalesMonth(id: Int!): CalcReturn!
-  fiveFavoritesJobs(id: Int!): [Job]!
-  getAvailableTimes(id: Int!, date: String!): [String]!
-  sendUserRecovery(user: UserInput!): MailReturn!
+  totalSalesGenerated: CalcReturn!
+  totalSalesMonth: CalcReturn!
+  fiveFavoritesJobs: ReturnFiveJobs!
+  getAvailableTimes(date: String!): [String]!
 }
 
 type Mutation {
   register(registerInput: RegisterInput!): DefaultReturn!
   login(loginInput: LoginInput!): LoginReturn!
-  editUser(email: String!, editUserInput: EditUserInput!): DefaultReturn!
+  editUser(editUserInput: EditUserInput!): DefaultReturn!
   requestPasswordReset(email: String!): DefaultReturn!
   resetPassword(resetPasswordInput: ResetPasswordInput!): DefaultReturn! 
-  createUserSettings(userSettingsInput: UserSettingsInput!): DefaultReturn!
   verifyToken: ReturnPayload!
 }

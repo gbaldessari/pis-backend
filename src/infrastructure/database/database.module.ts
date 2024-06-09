@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/entities/user.entity';
-import { UserSetting } from 'src/modules/users/entities/user-settings.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Job } from 'src/modules/jobs/entities/job.entity';
 import { Category } from 'src/modules/jobs/entities/category.entity';
@@ -20,7 +19,7 @@ import { Review } from 'src/modules/jobs/entities/review.entity';
           username: configService.get<string>('TYPEORM_USERNAME'),
           password: configService.get<string>('TYPEORM_PASSWORD'),
           database: configService.get<string>('TYPEORM_DATABASE'),
-          entities: [User, UserSetting, Job, Category, Meet, Review],
+          entities: [User, Job, Category, Meet, Review],
           synchronize: configService.get<boolean>('TYPEORM_SYNCHRONIZE'),
           logging: true,
       }),

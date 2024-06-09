@@ -11,7 +11,4 @@ export class CreateReviewInput {
 
     @Field()
     idJob: number;
-
-    @Field()
-    idUser: number;
 }

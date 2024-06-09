@@ -13,7 +13,7 @@ export class CreateJobInput {
     idCategory: number;
 
     @Field()
-    idProfessional: number;
+    price: number;
 
 }
 
