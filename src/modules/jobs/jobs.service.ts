@@ -20,7 +20,7 @@ export class JobsService {
   ){}
 
   async getJobs() {
-    return await this.jobRepository.find();
+    return await this.jobRepository.find({relations: ["idProfessional", "idCategory"]});
   }
 
   async getByName(jobName: string) {

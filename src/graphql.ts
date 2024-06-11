@@ -248,6 +248,7 @@ export interface MailReturn {
 export interface ReturnPayload {
     id: number;
     email: string;
+    isAdmin: boolean;
     iat: number;
     exp: number;
 }

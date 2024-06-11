@@ -48,6 +48,7 @@ type MailReturn {
 type ReturnPayload {
   id: Int!
   email: String!
+  isAdmin: Boolean!
   iat: Int!
   exp: Int!
 }
