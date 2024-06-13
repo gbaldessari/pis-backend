@@ -97,6 +97,8 @@ input ResetPasswordInput {
 
 type Query {
   users: [User]!
+  user(): User!
+  getUserMeets: [Meet]!
   totalSalesGenerated: CalcReturn!
   totalSalesMonth: CalcReturn!
   fiveFavoritesJobs: ReturnFiveJobs!

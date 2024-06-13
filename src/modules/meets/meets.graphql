@@ -1,6 +1,7 @@
 type Meet {
   id: Int!
   idJob: Job!
+  idProfessional: User!
   idUser: User!
   meetDate: String!
   startTime: String!

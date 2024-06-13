@@ -54,6 +54,26 @@ export class UserService {
     return this.userRepository.find();
   }
 
+  async getUserMeets(id: number) {
+    const user: User = await this.userRepository.
+    findOne({
+      where: {id}, 
+      relations: ['userMeets']
+    });
+
+    if (!user) return {
+      data: null,
+      message: 'Usuario no encontrado',
+      success: false
+    };
+
+    return {
+      data: user.userMeets,
+      message: 'Citas encontradas',
+      success: true
+    };
+  }
+
   async login(loginInput: LoginInput) {
     try {
       const { email, password } = loginInput;

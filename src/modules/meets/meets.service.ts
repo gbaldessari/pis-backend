@@ -23,7 +23,11 @@ export class MeetsService {
   async getById(id: number) {
     try {
       return {
-        data: await this.meetRepository.findOneBy({id}),
+        data: await this.meetRepository.
+          findOne({
+            where: {id},
+            relations: ['idProfessional', 'idUser']
+          }),
         success: true
       }
     } catch (e) {
@@ -62,6 +66,12 @@ export class MeetsService {
     if(!client) return {
       data: null,
       message: 'Usuario no encontrado',
+      success: false
+    }
+
+    if(client.id === professional.id) return {
+      data: null,
+      message: 'No puedes agendar una cita contigo mismo',
       success: false
     }
 

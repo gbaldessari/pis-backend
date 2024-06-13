@@ -38,6 +38,28 @@ export class UserResolver {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Query('user')
+    async getUserById(@Context() context: any){
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.getUserById(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Query('getUserMeets')
+    async getUserMeets(@Context() context: any){
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.getUserMeets(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Query('totalSalesGenerated')
     async getTotalSalesGenerated(@Context() context: any){
         try {
