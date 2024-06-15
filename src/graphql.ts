@@ -174,6 +174,8 @@ export interface IQuery {
     meets(): Nullable<Meet>[] | Promise<Nullable<Meet>[]>;
     meet(id: number): QueryMeetReturn | Promise<QueryMeetReturn>;
     users(): Nullable<User>[] | Promise<Nullable<User>[]>;
+    user(): User | Promise<User>;
+    getUserMeets(): Nullable<Meet>[] | Promise<Nullable<Meet>[]>;
     totalSalesGenerated(): CalcReturn | Promise<CalcReturn>;
     totalSalesMonth(): CalcReturn | Promise<CalcReturn>;
     fiveFavoritesJobs(): ReturnFiveJobs | Promise<ReturnFiveJobs>;
@@ -201,6 +203,7 @@ export interface IMutation {
 export interface Meet {
     id: number;
     idJob: Job;
+    idProfessional: User;
     idUser: User;
     meetDate: string;
     startTime: string;
