@@ -31,6 +31,7 @@ export class UserResolver {
     @Query('users')
     async getUsers() {
         try {
+            console.log(await this.userService.getUsers());
             return await this.userService.getUsers();
         } catch(e) {
             throw new Error("INTERNAL_SERVER_ERROR" + e);

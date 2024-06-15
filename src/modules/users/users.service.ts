@@ -37,7 +37,7 @@ export class UserService {
   }
 
   async getUserById(id: number){
-    try {
+    try { 
       return {
         data: await this.userRepository.findOneBy({id}),
         success: true
@@ -58,7 +58,12 @@ export class UserService {
     const user: User = await this.userRepository.
     findOne({
       where: {id}, 
-      relations: ['userMeets']
+      relations: [
+        'userMeets',
+        'userMeets.idProfessional',
+        'userMeets.idJob',
+        'userMeets.idUser'
+      ]
     });
 
     if (!user) return {

@@ -57,6 +57,17 @@ type ReturnFiveJobs{
   data: [Job]!
   message: String!
   success: Boolean!
+}
+
+type ReturnUser {
+  data: User
+  success: Boolean!
+}
+
+type ReturnMeets {
+  data: [Meet]!
+  message: String!
+  success: Boolean!
 
 }
 
@@ -97,8 +108,8 @@ input ResetPasswordInput {
 
 type Query {
   users: [User]!
-  user: User!
-  getUserMeets: [Meet]!
+  user: ReturnUser!
+  getUserMeets: ReturnMeets!
   totalSalesGenerated: CalcReturn!
   totalSalesMonth: CalcReturn!
   fiveFavoritesJobs: ReturnFiveJobs!

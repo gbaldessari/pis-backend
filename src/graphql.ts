@@ -174,8 +174,8 @@ export interface IQuery {
     meets(): Nullable<Meet>[] | Promise<Nullable<Meet>[]>;
     meet(id: number): QueryMeetReturn | Promise<QueryMeetReturn>;
     users(): Nullable<User>[] | Promise<Nullable<User>[]>;
-    user(): User | Promise<User>;
-    getUserMeets(): Nullable<Meet>[] | Promise<Nullable<Meet>[]>;
+    user(): ReturnUser | Promise<ReturnUser>;
+    getUserMeets(): ReturnMeets | Promise<ReturnMeets>;
     totalSalesGenerated(): CalcReturn | Promise<CalcReturn>;
     totalSalesMonth(): CalcReturn | Promise<CalcReturn>;
     fiveFavoritesJobs(): ReturnFiveJobs | Promise<ReturnFiveJobs>;
@@ -258,6 +258,17 @@ export interface ReturnPayload {
 
 export interface ReturnFiveJobs {
     data: Nullable<Job>[];
+    message: string;
+    success: boolean;
+}
+
+export interface ReturnUser {
+    data?: Nullable<User>;
+    success: boolean;
+}
+
+export interface ReturnMeets {
+    data: Nullable<Meet>[];
     message: string;
     success: boolean;
 }
