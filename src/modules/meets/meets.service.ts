@@ -172,7 +172,11 @@ export class MeetsService {
   }
 
   async getMeets() {
-    return await this.meetRepository.find();
+    try {
+      return await this.meetRepository.find();
+    } catch (e) {
+      return null;
+    }
   }
 
   async getMeetById(id: number) {

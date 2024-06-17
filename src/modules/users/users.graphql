@@ -54,7 +54,7 @@ type ReturnPayload {
 }
 
 type ReturnFiveJobs{
-  data: [Job]!
+  data: [Job]
   message: String!
   success: Boolean!
 }
@@ -65,10 +65,15 @@ type ReturnUser {
 }
 
 type ReturnMeets {
-  data: [Meet]!
+  data: [Meet]
   message: String!
   success: Boolean!
+}
 
+type ReturnTimes {
+  data: [String]
+  message: String!
+  success: Boolean!
 }
 
 input RegisterInput {
@@ -107,13 +112,13 @@ input ResetPasswordInput {
 }
 
 type Query {
-  users: [User]!
+  users: [User]
   user: ReturnUser!
   getUserMeets: ReturnMeets!
   totalSalesGenerated: CalcReturn!
   totalSalesMonth: CalcReturn!
   fiveFavoritesJobs: ReturnFiveJobs!
-  getAvailableTimes(date: String!): [String]!
+  getAvailableTimes(date: String!): ReturnTimes!
 }
 
 type Mutation {

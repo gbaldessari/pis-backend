@@ -51,7 +51,11 @@ export class UserService {
   }
 
   async getUsers() {
-    return this.userRepository.find();
+    try {
+      return this.userRepository.find();
+    } catch (e) {
+      return null;
+    }
   }
 
   async getUserMeets(id: number) {
@@ -62,7 +66,8 @@ export class UserService {
         'userMeets',
         'userMeets.idProfessional',
         'userMeets.idJob',
-        'userMeets.idUser'
+        'userMeets.idUser',
+        'userMeets.idJob.idCategory'
       ]
     });
 

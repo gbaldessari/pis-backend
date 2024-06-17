@@ -58,7 +58,7 @@ input CreateMeetInput {
 }
 
 type Query {
-  meets: [Meet]!
+  meets: [Meet]
   meet(id: Int!): QueryMeetReturn!
 }
 

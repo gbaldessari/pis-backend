@@ -14,7 +14,11 @@ export class CategoryService {
     ) {}
 
     async getCategories(){
-        return await this.categoryRepository.find();
+        try {
+            return await this.categoryRepository.find();
+        } catch(e) {
+            return null;
+        }
     }
 
     async getById(id:number){

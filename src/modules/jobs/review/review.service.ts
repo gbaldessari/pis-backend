@@ -19,7 +19,11 @@ export class ReviewService {
     ) {}
 
     async getReviews() {
-        return await this.reviewRepository.find();
+        try {
+            return await this.reviewRepository.find();
+        } catch(e) {
+            return null;
+        }
     }
 
     async getById(id: number) {
