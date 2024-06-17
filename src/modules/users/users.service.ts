@@ -67,7 +67,8 @@ export class UserService {
         'userMeets.idProfessional',
         'userMeets.idJob',
         'userMeets.idUser',
-        'userMeets.idJob.idCategory'
+        'userMeets.idJob.idCategory',
+        'userMeets.idJob.idProfessional',
       ]
     });
 

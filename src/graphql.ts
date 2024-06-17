@@ -160,26 +160,26 @@ export interface QueryReviewJob {
 }
 
 export interface IQuery {
-    jobs(): Nullable<Job>[] | Promise<Nullable<Job>[]>;
+    jobs(): Nullable<Nullable<Job>[]> | Promise<Nullable<Nullable<Job>[]>>;
     jobByName(name: string): QueryReturnJob | Promise<QueryReturnJob>;
     jobByCategory(category: string): QueryByCategoryReturn | Promise<QueryByCategoryReturn>;
     jobById(id: number): QueryReturnJob | Promise<QueryReturnJob>;
-    categories(): Nullable<Category>[] | Promise<Nullable<Category>[]>;
+    categories(): Nullable<Nullable<Category>[]> | Promise<Nullable<Nullable<Category>[]>>;
     categoryById(id: number): QueryCategoryReturn | Promise<QueryCategoryReturn>;
     categoryByName(name: string): QueryCategoryReturn | Promise<QueryCategoryReturn>;
     existReview(idJob: number): ExistReviewReturn | Promise<ExistReviewReturn>;
     getReviewById(id: number): DefaultReviewReturn | Promise<DefaultReviewReturn>;
-    reviews(): Nullable<Review>[] | Promise<Nullable<Review>[]>;
+    reviews(): Nullable<Nullable<Review>[]> | Promise<Nullable<Nullable<Review>[]>>;
     getReviewsByJob(idJob: number): QueryReviewJob | Promise<QueryReviewJob>;
-    meets(): Nullable<Meet>[] | Promise<Nullable<Meet>[]>;
+    meets(): Nullable<Nullable<Meet>[]> | Promise<Nullable<Nullable<Meet>[]>>;
     meet(id: number): QueryMeetReturn | Promise<QueryMeetReturn>;
-    users(): Nullable<User>[] | Promise<Nullable<User>[]>;
+    users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
     user(): ReturnUser | Promise<ReturnUser>;
     getUserMeets(): ReturnMeets | Promise<ReturnMeets>;
     totalSalesGenerated(): CalcReturn | Promise<CalcReturn>;
     totalSalesMonth(): CalcReturn | Promise<CalcReturn>;
     fiveFavoritesJobs(): ReturnFiveJobs | Promise<ReturnFiveJobs>;
-    getAvailableTimes(date: string): Nullable<string>[] | Promise<Nullable<string>[]>;
+    getAvailableTimes(date: string): ReturnTimes | Promise<ReturnTimes>;
 }
 
 export interface IMutation {
@@ -257,7 +257,7 @@ export interface ReturnPayload {
 }
 
 export interface ReturnFiveJobs {
-    data: Nullable<Job>[];
+    data?: Nullable<Nullable<Job>[]>;
     message: string;
     success: boolean;
 }
@@ -268,7 +268,13 @@ export interface ReturnUser {
 }
 
 export interface ReturnMeets {
-    data: Nullable<Meet>[];
+    data?: Nullable<Nullable<Meet>[]>;
+    message: string;
+    success: boolean;
+}
+
+export interface ReturnTimes {
+    data?: Nullable<Nullable<string>[]>;
     message: string;
     success: boolean;
 }
