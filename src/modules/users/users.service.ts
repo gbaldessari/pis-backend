@@ -164,10 +164,18 @@ export class UserService {
     const user: User = (await this.getUserById(id)).data;
 
     if (!user) return {
-      data: "",
+      data: null,
       message: 'Usuario no encontrado',
       success: false
     };
+
+    if (user.isProfessional && editUserInput.isProfessional === false) {
+      return {
+        data: null,
+        message: 'No puedes cambiar a usuario no profesional',
+        success: false
+      };
+    }
 
     const updatedUser: User = await this.userRepository.save({
       ...user,
