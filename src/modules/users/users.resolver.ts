@@ -29,10 +29,10 @@ export class UserResolver {
     
     @UseGuards(JwtAuthGuard)
     @Query('users')
-    async getUsers() {
+    async getUsers(@Context() context: any) {
         try {
-            console.log(await this.userService.getUsers());
-            return await this.userService.getUsers();
+            const id: number = context.req.user.id;
+            return await this.userService.getUsers(id);
         } catch(e) {
             throw new Error("INTERNAL_SERVER_ERROR" + e);
         }

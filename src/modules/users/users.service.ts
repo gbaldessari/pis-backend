@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/entities/user.entity';
 import { RegisterInput } from 'src/modules/users/dto/register-input'
-import { Repository, Connection, EntityManager } from 'typeorm';
+import { Repository, Connection, EntityManager, Not } from 'typeorm';
 import { HttpStatus } from '@nestjs/common';
 import { hash, compare } from 'bcrypt';
 import { LoginInput } from './dto/login-input';
@@ -50,9 +50,13 @@ export class UserService {
     }
   }
 
-  async getUsers() {
+  async getUsers(id: number) {
     try {
-      return this.userRepository.find();
+      return this.userRepository.find({
+        where: {
+          id: Not(id)
+        }
+      });
     } catch (e) {
       return null;
     }
