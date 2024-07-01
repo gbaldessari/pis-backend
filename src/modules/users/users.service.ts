@@ -395,7 +395,13 @@ export class UserService {
   async getUserReviews(id: number) {
     const user: User = await this.userRepository.findOne({where:{
       id
-    }, relations: ['reviews']});
+    }, relations: [
+      'reviews',
+      'reviews.user',
+      'reviews.job',
+      'reviews.job.idProfessional',
+      'reviews.job.idCategory'
+    ]});
 
     if(!user) return {
       data: null,

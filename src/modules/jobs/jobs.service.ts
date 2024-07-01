@@ -232,7 +232,13 @@ export class JobsService {
 
   async getReviews(id: number) {
     const job: Job = await this.jobRepository.findOne(
-      {where: {id}, relations: ["reviews"]}
+      {where: {id}, relations: [
+        'reviews',
+        'reviews.user',
+        'reviews.job',
+        'reviews.job.idProfessional',
+        'reviews.job.idCategory'
+      ]}
     )
 
     if (!job) return {
