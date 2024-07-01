@@ -93,6 +93,7 @@ export class UserResolver {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Query('getAvailableTimes')
     async getAvailableTimes(
         @Context() context: any, 
@@ -101,6 +102,32 @@ export class UserResolver {
         try {
             const id: number = context.req.user.id;
             return await this.userService.showAvailableTimes(id, date);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Query('getUserReviews')
+    async getUserReviews(
+        @Context() context: any,
+    ){
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.getUserReviews(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Query('getProfessionalJobs')
+    async getProfessionalJobs(
+        @Context() context: any,
+    ){
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.getProfessionalJobs(id);
         } catch (e) {
             throw new Error("INTERNAL_SERVER_ERROR" + e);
         }

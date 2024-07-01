@@ -178,8 +178,10 @@ export interface IQuery {
     getUserMeets(): ReturnMeets | Promise<ReturnMeets>;
     totalSalesGenerated(): CalcReturn | Promise<CalcReturn>;
     totalSalesMonth(): CalcReturn | Promise<CalcReturn>;
-    fiveFavoritesJobs(): ReturnFiveJobs | Promise<ReturnFiveJobs>;
+    fiveFavoritesJobs(): ReturnJobs | Promise<ReturnJobs>;
     getAvailableTimes(date: string): ReturnTimes | Promise<ReturnTimes>;
+    getUserReviews(): ReturnReviews | Promise<ReturnReviews>;
+    getProfessionalJobs(): ReturnJobs | Promise<ReturnJobs>;
 }
 
 export interface IMutation {
@@ -256,7 +258,7 @@ export interface ReturnPayload {
     exp: number;
 }
 
-export interface ReturnFiveJobs {
+export interface ReturnJobs {
     data?: Nullable<Nullable<Job>[]>;
     message: string;
     success: boolean;
@@ -275,6 +277,12 @@ export interface ReturnMeets {
 
 export interface ReturnTimes {
     data?: Nullable<Nullable<string>[]>;
+    message: string;
+    success: boolean;
+}
+
+export interface ReturnReviews {
+    data?: Nullable<Nullable<Review>[]>;
     message: string;
     success: boolean;
 }

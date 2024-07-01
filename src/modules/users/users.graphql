@@ -18,6 +18,19 @@ type Job {
   requestsCount: Int!
 }
 
+type Review {
+  id: Int!
+  comment: String!
+  rate: Int!
+  job: Job!
+  user: User!
+}
+
+type Category {
+  id: Int!
+  categoryName: String!
+}
+
 type DefaultReturn {
   data: String
   message: String!
@@ -53,7 +66,7 @@ type ReturnPayload {
   exp: Int!
 }
 
-type ReturnFiveJobs{
+type ReturnJobs{
   data: [Job]
   message: String!
   success: Boolean!
@@ -72,6 +85,12 @@ type ReturnMeets {
 
 type ReturnTimes {
   data: [String]
+  message: String!
+  success: Boolean!
+}
+
+type ReturnReviews {
+  data: [Review]
   message: String!
   success: Boolean!
 }
@@ -117,8 +136,10 @@ type Query {
   getUserMeets: ReturnMeets!
   totalSalesGenerated: CalcReturn!
   totalSalesMonth: CalcReturn!
-  fiveFavoritesJobs: ReturnFiveJobs!
+  fiveFavoritesJobs: ReturnJobs!
   getAvailableTimes(date: String!): ReturnTimes!
+  getUserReviews: ReturnReviews!
+  getProfessionalJobs: ReturnJobs!
 }
 
 type Mutation {

@@ -125,9 +125,6 @@ export class MeetsService {
   }
 
   async finishMeet(idProfessional: number, idMeet: number) {
-    
-    console.log(idProfessional, idMeet)
-
     const meet: Meet = await this.meetRepository.
     findOne({
       where: {id: idMeet}, 
@@ -164,8 +161,6 @@ export class MeetsService {
       isDone: true
     };
 
-    console.log(meetUpdated)
-
     const meetRet = await this.meetRepository.save(meetUpdated);
     const newRequestCount = meet.idJob.requestsCount + 1;
     const updateInput: UpdateJobInput = {
@@ -175,8 +170,6 @@ export class MeetsService {
     await this.jobSrevice.updateJob(
       idProfessional, meet.idJob.jobName, updateInput
     );
-
-    console.log(meetRet)
 
     return {
       data: meetRet,

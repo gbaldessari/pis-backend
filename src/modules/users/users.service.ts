@@ -392,4 +392,50 @@ export class UserService {
     };
   }
 
+  async getUserReviews(id: number) {
+    const user: User = await this.userRepository.findOne({where:{
+      id
+    }, relations: ['reviews']});
+
+    if(!user) return {
+      data: null,
+      message: 'Usuario no encontrado',
+      success: false
+    }
+
+    return {
+      data: user.reviews,
+      message: 'Reviews encontradas',
+      success: true
+    }
+  }
+
+  async getProfessionalJobs(id: number) {
+    const user: User = await this.userRepository.findOne({where:{
+      id
+    }, relations: [
+      'jobs',
+      'jobs.idCategory',
+      'jobs.idProfessional',
+    ]});
+
+    if(!user) return {
+      data: null,
+      message: 'Usuario no encontrado',
+      success: false
+    }
+
+    if(!user.isProfessional) return {
+      data: null,
+      message: 'Usuario no es un profesional',
+      success: false
+    }
+
+    return {
+      data: user.jobs,
+      message: 'Trabajos encontrados',
+      success: true
+    }
+  }
+
 }
