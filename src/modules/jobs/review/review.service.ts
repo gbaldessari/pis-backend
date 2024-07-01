@@ -69,6 +69,8 @@ export class ReviewService {
     }
 
     async createReview(id: number, createReviewInput: CreateReviewInput) {
+        console.log(createReviewInput);
+
         const job: Job = (
             await this.jobService.getById(createReviewInput.idJob)
         ).data;

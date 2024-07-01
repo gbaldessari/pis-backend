@@ -2,6 +2,8 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ReviewService } from "./review.service";
 import { CreateReviewInput } from "../dto/create-review-input";
 import { Context } from "@nestjs/graphql";
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../users/guard/auth.guard';
 
 @Resolver('review')
 export class ReviewResolver {
@@ -40,6 +42,7 @@ export class ReviewResolver {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Mutation('createReview')
     async createReview(
         @Context() context: any,

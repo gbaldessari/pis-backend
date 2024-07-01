@@ -153,6 +153,9 @@ export class UserService {
         }
       },
     );
+
+    console.log(user)
+
     return { 
       data: user.email, 
       message: 'Usuario registrado',
@@ -177,10 +180,14 @@ export class UserService {
       };
     }
 
+    console.log(user)
+
     const updatedUser: User = await this.userRepository.save({
       ...user,
       ...editUserInput
     });
+
+    console.log(updatedUser)
 
     return {
       data: updatedUser.email,
