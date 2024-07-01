@@ -125,6 +125,9 @@ export class MeetsService {
   }
 
   async finishMeet(idProfessional: number, idMeet: number) {
+    
+    console.log(idProfessional, idMeet)
+
     const meet: Meet = await this.meetRepository.
     findOne({
       where: {id: idMeet}, 
@@ -149,10 +152,19 @@ export class MeetsService {
       success: false
     }
 
+    if(!(await this.userService.getUserById(idProfessional)).data.isProfessional) 
+    return {
+      data: null,
+      message: 'Usuario no es un profesional',
+      success: false
+    }
+
     const meetUpdated: Meet = {
       ...meet,
       isDone: true
     };
+
+    console.log(meetUpdated)
 
     const meetRet = await this.meetRepository.save(meetUpdated);
     const newRequestCount = meet.idJob.requestsCount + 1;
@@ -163,6 +175,8 @@ export class MeetsService {
     await this.jobSrevice.updateJob(
       idProfessional, meet.idJob.jobName, updateInput
     );
+
+    console.log(meetRet)
 
     return {
       data: meetRet,

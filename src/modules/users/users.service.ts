@@ -154,8 +154,6 @@ export class UserService {
       },
     );
 
-    console.log(user)
-
     return { 
       data: user.email, 
       message: 'Usuario registrado',
@@ -180,14 +178,10 @@ export class UserService {
       };
     }
 
-    console.log(user)
-
     const updatedUser: User = await this.userRepository.save({
       ...user,
       ...editUserInput
     });
-
-    console.log(updatedUser)
 
     return {
       data: updatedUser.email,
@@ -211,7 +205,7 @@ export class UserService {
 
       this.userRepository.save(findUser);
       this.mailService.sendUserRecovery(findUser);
-      console.log('Correo enviado');
+      
       return {
         data: findUser.email,
         message: 'Se ha enviado un codigo a tu correo',

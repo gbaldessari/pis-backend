@@ -13,8 +13,8 @@ type Review {
   id: Int!
   comment: String!
   rate: Int!
-  idJob: Job!
-  idUser: User!
+  job: Job!
+  user: User!
 }
 
 type User {

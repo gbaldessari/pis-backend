@@ -7,6 +7,7 @@ import { Job } from '../entities/job.entity';
 import { CreateReviewInput } from '../dto/create-review-input';
 import { User } from 'src/graphql';
 import { UserService } from 'src/modules/users/users.service';
+import { copyFileSync } from 'fs';
 
 @Injectable()
 export class ReviewService {
@@ -51,11 +52,9 @@ export class ReviewService {
             await this.userService.getUserById(id)
         ).data;
 
-        const existJob = await this.reviewRepository.findOneBy({job});
+        const existReview = await this.reviewRepository.findOneBy({job, user});
 
-        const existUser = await this.reviewRepository.findOneBy({user});
-
-        if(existJob === existUser) {
+        if(existReview) {
             return {
                 message: 'Review encontrada',
                 success: true
@@ -69,6 +68,7 @@ export class ReviewService {
     }
 
     async createReview(id: number, createReviewInput: CreateReviewInput) {
+        console.log(id);
         console.log(createReviewInput);
 
         const job: Job = (
@@ -115,7 +115,7 @@ export class ReviewService {
             async (transactionalEntityManager: EntityManager): Promise<void> => {
                 try {
                     review = this.reviewRepository.create(reviewInput);
-                    await transactionalEntityManager.save(job);
+                    await transactionalEntityManager.save(review);
                 } catch (error: unknown) {
                     throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.toString());
                 }

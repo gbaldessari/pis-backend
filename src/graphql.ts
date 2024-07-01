@@ -90,8 +90,8 @@ export interface Review {
     id: number;
     comment: string;
     rate: number;
-    idJob: Job;
-    idUser: User;
+    job: Job;
+    user: User;
 }
 
 export interface User {
