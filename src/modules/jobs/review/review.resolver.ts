@@ -29,6 +29,7 @@ export class ReviewResolver {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Query('existReview')
     async existReview(
         @Context() context: any,
@@ -56,6 +57,7 @@ export class ReviewResolver {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Mutation('removeReview')
     async removeReview(@Args('id') id: number) {
         try {
