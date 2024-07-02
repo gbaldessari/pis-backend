@@ -157,7 +157,11 @@ export class JobsService {
     }
   }
 
-  async updateJob(id: number, jobName: string, updateJobInput: UpdateJobInput) {
+  async updateJob(
+    id: number, 
+    jobName: string, 
+    updateJobInput: UpdateJobInput
+  ) {
     const job: Job = (
       await this.getByName(jobName)
     ).data;
@@ -232,7 +236,7 @@ export class JobsService {
 
   async getReviews(id: number) {
     const job: Job = await this.jobRepository.findOne(
-      {where: {id}, relations: [
+      {where: {id: id}, relations: [
         'reviews',
         'reviews.user',
         'reviews.job',
@@ -242,8 +246,14 @@ export class JobsService {
     )
 
     if (!job) return {
-      data: null,
+      data: [],
       message: 'Servicio no encontrado',
+      success: false
+    }
+
+    if(!job.reviews) return {
+      data: [],
+      message: 'No hay reseñas',
       success: false
     }
 

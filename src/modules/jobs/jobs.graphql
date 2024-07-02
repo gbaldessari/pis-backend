@@ -118,7 +118,7 @@ type Query {
   existReview(idJob: Int!): ExistReviewReturn!
   getReviewById(id: Int!): DefaultReviewReturn!
   reviews: [Review]
-  getReviewsByJob(idJob: Int!): QueryReviewJob!
+  getReviewsByJob(id: Int!): QueryReviewJob!
 }
 
 type Mutation {

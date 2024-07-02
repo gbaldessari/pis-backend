@@ -39,6 +39,9 @@ export class MeetsService {
   }
 
   async createMeet(id: number, createMeetInput: CreateMeetInput) {
+    const { startTime } = createMeetInput;
+    const fullStartTime = startTime+":00";
+
     const job: Job = (
       await this.jobSrevice.getById(createMeetInput.idJob)
     ).data;
@@ -77,7 +80,9 @@ export class MeetsService {
 
     const confDateProffesional = await this.userService
     .getUserMeetByDate(
-      professional.id, createMeetInput.meetDate
+      professional.id, 
+      createMeetInput.meetDate,
+      fullStartTime
     );
 
     if(!confDateProffesional.success) return {
@@ -87,8 +92,10 @@ export class MeetsService {
     }
 
     const confDateUser = await this.userService.getUserMeetByDate(
-      client.id, createMeetInput.meetDate);
-
+      client.id, 
+      createMeetInput.meetDate,
+      fullStartTime
+    );
 
     if(!confDateUser.success) return {
       data: null,

@@ -250,7 +250,7 @@ export class UserService {
     }
   }
 
-  async getUserMeetByDate(id: number, date: string) {
+  async getUserMeetByDate(id: number, date: string, startTime: string) {
     const user: User = await this.userRepository.findOne({ 
       where: {id},  relations: ['professionalMeets', 'userMeets'] 
     });
@@ -261,23 +261,33 @@ export class UserService {
     }
 
     if(user.isProfessional) {
-      const existDate = user.professionalMeets.find(
-        (meet) => meet.meetDate === date);
-      const existTimeStart = user.professionalMeets.find(
-        (meet) => meet.startTime === date);
+      const existMeetProfessional = user.professionalMeets
+      .find(
+        (meet) => meet.meetDate === date 
+        &&
+         meet.startTime === startTime
+      );
 
-      if (existDate && existTimeStart) return {
+      const existMeetUser = user.userMeets
+      .find(
+        (meet) => meet.meetDate === date 
+        &&
+         meet.startTime === startTime
+      );
+
+      if (existMeetProfessional || existMeetUser) return {
         message: 'Ya existe una cita en esa fecha',
         success: false,
       };
     } else {
-      const existDate = user.userMeets
-      .find((meet) => meet.meetDate === date);
+      const existMeet = user.userMeets
+      .find(
+        (meet) => meet.meetDate === date 
+        &&
+         meet.startTime === startTime
+      );
 
-      const existTimeStart = user.userMeets
-      .find((meet) => meet.startTime === date);
-
-      if (existDate && existTimeStart) return {
+      if (existMeet) return {
         message: 'Ya existe una cita en esa fecha',
         success: false,
       };

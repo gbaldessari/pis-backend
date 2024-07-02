@@ -175,7 +175,7 @@ export interface IQuery {
     existReview(idJob: number): ExistReviewReturn | Promise<ExistReviewReturn>;
     getReviewById(id: number): DefaultReviewReturn | Promise<DefaultReviewReturn>;
     reviews(): Nullable<Nullable<Review>[]> | Promise<Nullable<Nullable<Review>[]>>;
-    getReviewsByJob(idJob: number): QueryReviewJob | Promise<QueryReviewJob>;
+    getReviewsByJob(id: number): QueryReviewJob | Promise<QueryReviewJob>;
     meets(): Nullable<Nullable<Meet>[]> | Promise<Nullable<Nullable<Meet>[]>>;
     meet(id: number): QueryMeetReturn | Promise<QueryMeetReturn>;
     users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
