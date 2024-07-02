@@ -12,6 +12,7 @@ import { ResetPasswordInput } from "./dto/reset-password-input";
 import { EditUserInput } from "./dto/edit-user-input";
 import { UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "./guard/auth.guard";
+import { AvaibleTimesInput } from "./dto/avaible-times-input";
 
 @Resolver('User')
 export class UserResolver {
@@ -95,13 +96,11 @@ export class UserResolver {
 
     @UseGuards(JwtAuthGuard)
     @Query('getAvailableTimes')
-    async getAvailableTimes(
-        @Context() context: any, 
-        @Args('date') date: string
+    async getAvailableTimes( 
+        @Args('avaibleTimesInput') avaibleTimesInput: AvaibleTimesInput,
     ){
         try {
-            const id: number = context.req.user.id;
-            return await this.userService.showAvailableTimes(id, date);
+            return await this.userService.showAvailableTimes(avaibleTimesInput);
         } catch (e) {
             throw new Error("INTERNAL_SERVER_ERROR" + e);
         }

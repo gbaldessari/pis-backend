@@ -11,6 +11,7 @@ import { EditUserInput } from './dto/edit-user-input';
 import { EmailService } from './email/email.service';
 import { ResetPasswordInput } from './dto/reset-password-input';
 import { randomBytes } from 'crypto';
+import { AvaibleTimesInput } from './dto/avaible-times-input';
 
 @Injectable()
 export class UserService {
@@ -360,9 +361,10 @@ export class UserService {
     };
   }
 
-  async showAvailableTimes(id: number, date: string){
+  async showAvailableTimes(avaibleTimesInput: AvaibleTimesInput){
+    const { idProfessional, date } = avaibleTimesInput;
     const findProfessional = await this.userRepository.findOne(
-      {where: {id}, relations: ['professionalMeets']});
+      {where: {id: idProfessional}, relations: ['professionalMeets']});
 
     if (!findProfessional || !findProfessional.isProfessional) return {
       data: null,

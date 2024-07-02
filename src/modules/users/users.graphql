@@ -130,6 +130,11 @@ input ResetPasswordInput {
   password: String!
 }
 
+input AvaibleTimesInput {
+  idProfessional: Int!
+  date: String!
+}
+
 type Query {
   users: [User]
   user: ReturnUser!
@@ -137,7 +142,7 @@ type Query {
   totalSalesGenerated: CalcReturn!
   totalSalesMonth: CalcReturn!
   fiveFavoritesJobs: ReturnJobs!
-  getAvailableTimes(date: String!): ReturnTimes!
+  getAvailableTimes(avaibleTimesInput: AvaibleTimesInput!): ReturnTimes!
   getUserReviews: ReturnReviews!
   getProfessionalJobs: ReturnJobs!
 }

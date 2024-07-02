@@ -75,6 +75,11 @@ export interface ResetPasswordInput {
     password: string;
 }
 
+export interface AvaibleTimesInput {
+    idProfessional: number;
+    date: string;
+}
+
 export interface Job {
     id: number;
     jobName: string;
@@ -179,7 +184,7 @@ export interface IQuery {
     totalSalesGenerated(): CalcReturn | Promise<CalcReturn>;
     totalSalesMonth(): CalcReturn | Promise<CalcReturn>;
     fiveFavoritesJobs(): ReturnJobs | Promise<ReturnJobs>;
-    getAvailableTimes(date: string): ReturnTimes | Promise<ReturnTimes>;
+    getAvailableTimes(avaibleTimesInput: AvaibleTimesInput): ReturnTimes | Promise<ReturnTimes>;
     getUserReviews(): ReturnReviews | Promise<ReturnReviews>;
     getProfessionalJobs(): ReturnJobs | Promise<ReturnJobs>;
 }
