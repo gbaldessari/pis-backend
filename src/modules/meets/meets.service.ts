@@ -189,7 +189,15 @@ export class MeetsService {
   async getMeetById(id: number) {
     try {
       return {
-        data: await this.meetRepository.findOneBy({id}),
+        data: await this.meetRepository.findOne({
+          where:{id,},
+          relations: [
+            'idProfessional', 
+            'idUser',
+            'idJob', 
+            'idJob.idProfessional', 
+            'idJob.idCategory'
+        ]}),
         success: true
       }
     } catch (e) {
