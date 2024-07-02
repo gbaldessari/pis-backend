@@ -44,11 +44,11 @@ export class SocketGateway implements
   @SubscribeMessage('event-message')
   handleIncomingMessage(
     client: Socket,
-    payload: { room: string, message: string }
+    payload: { room: string, message: string, user: string }
   ){
-    const { room, message } = payload;
+    const { room, message, user } = payload;
     console.log(payload)
-    this.server.to(`room_${room}`).emit('new_message',message);
+    this.server.to(`room_${room}`).emit('new_message',{content:message, user});
   }
 
   @SubscribeMessage('event-leave')

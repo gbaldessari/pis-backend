@@ -342,7 +342,12 @@ export class UserService {
 
   async getFiveFavoritesJobs(id: number){
     const findProfessional = await this.userRepository.findOne(
-      {where: {id}, relations: ['jobs']});
+      {where: {id}, relations: [
+        'jobs',
+        'jobs.idCategory',
+        'jobs.idProfessional',
+      ]}
+    );
 
     if (!findProfessional || !findProfessional.isProfessional) return {
       data: [],
