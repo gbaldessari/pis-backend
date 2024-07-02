@@ -451,4 +451,65 @@ export class UserService {
     }
   }
 
+  async getUserChats(id: number){
+    const user:User = await this.userRepository.findOne(
+      {where:{id}, 
+      relations:[
+        'userMeets',
+        'userMeets.idProfessional',
+        'userMeets.idUser',
+        'professionalMeets',
+        'professionalMeets.idProfessional',
+        'professionalMeets.idUser',
+      ]});
+
+    if(!user) return {
+      data: null,
+      message: 'Usuario no encontrado',
+      success: false
+    }
+
+    let users: User[] = [];
+
+    if(user.isProfessional) {
+      
+      const clients: User[] = user.professionalMeets.
+      map(meet => meet.idUser);
+      const professionals: User[] = user.userMeets.
+      map(meet => meet.idProfessional);
+
+      const combinedUsers = [...clients, ...professionals];
+
+      const uniqueUsers = combinedUsers.reduce((acc, currentUser) => {
+        if (!acc.find(user => user.id === currentUser.id)) {
+          acc.push(currentUser);
+        }
+        return acc;
+      }, []);
+
+      users = uniqueUsers;
+    } else {
+      users = user.userMeets.map(meet => meet.idProfessional);
+      const uniqueUsers = users.reduce((acc, currentUser) => {
+        if (!acc.find(user => user.id === currentUser.id)) {
+          acc.push(currentUser);
+        }
+        return acc;
+      }, []);
+
+      users = uniqueUsers;
+    }
+
+    if(users.length === 0) return {
+      data: [],
+      message: 'No se encontraron usuarios',
+      success: false
+    }
+
+    return {
+      data: users,
+      message: 'Usuarios encontrados',
+      success: true
+    }
+  }
 }

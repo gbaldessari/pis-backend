@@ -132,6 +132,19 @@ export class UserResolver {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Query('getUserChats')
+    async getUserChats(
+        @Context() context: any,
+    ){
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.getUserChats(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
+    }
+
     @Mutation('login')
     async login(@Args('loginInput') loginInput: LoginInput) {
         try {

@@ -187,6 +187,7 @@ export interface IQuery {
     getAvailableTimes(avaibleTimesInput: AvaibleTimesInput): ReturnTimes | Promise<ReturnTimes>;
     getUserReviews(): ReturnReviews | Promise<ReturnReviews>;
     getProfessionalJobs(): ReturnJobs | Promise<ReturnJobs>;
+    getUserChats(): ReturnUsers | Promise<ReturnUsers>;
 }
 
 export interface IMutation {
@@ -288,6 +289,12 @@ export interface ReturnTimes {
 
 export interface ReturnReviews {
     data?: Nullable<Nullable<Review>[]>;
+    message: string;
+    success: boolean;
+}
+
+export interface ReturnUsers {
+    data?: Nullable<Nullable<User>[]>;
     message: string;
     success: boolean;
 }

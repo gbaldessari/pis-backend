@@ -95,6 +95,12 @@ type ReturnReviews {
   success: Boolean!
 }
 
+type ReturnUsers {
+  data: [User]
+  message: String!
+  success: Boolean!
+}
+
 input RegisterInput {
   username: String!
   email: String!
@@ -145,6 +151,7 @@ type Query {
   getAvailableTimes(avaibleTimesInput: AvaibleTimesInput!): ReturnTimes!
   getUserReviews: ReturnReviews!
   getProfessionalJobs: ReturnJobs!
+  getUserChats: ReturnUsers!
 }
 
 type Mutation {
