@@ -1,5 +1,10 @@
+import { 
+    Column, 
+    Entity, 
+    ManyToOne, 
+    PrimaryGeneratedColumn 
+} from "typeorm";
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Job } from "./job.entity";
 import { User } from "src/modules/users/entities/user.entity";
 

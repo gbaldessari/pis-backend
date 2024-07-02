@@ -11,6 +11,7 @@ export class ReviewResolver {
         private reviewService: ReviewService
     ) {}
 
+    @UseGuards(JwtAuthGuard)
     @Query('getReviewById')
     async getById(@Args('id') id: number) {
         try {
@@ -20,6 +21,7 @@ export class ReviewResolver {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Query('reviews')
     async getReviews() {
         try {

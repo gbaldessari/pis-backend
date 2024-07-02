@@ -17,5 +17,4 @@ export class UpdateJobInput{
 
   @Field({nullable: true})
   price?: number;
-  
 }

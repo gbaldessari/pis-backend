@@ -55,7 +55,6 @@ export class JobsResolver {
   @Query('getReviewsByJob')
   async getReviewsByJob(@Args('id') id: number) {
     try {
-      console.log(id)
       return await this.jobsService.getReviews(id);
     } catch (e) {
       throw new Error("INTERNAL_SERVER_ERROR" + e);

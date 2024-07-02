@@ -35,7 +35,12 @@ export class JobsService {
   async getByName(jobName: string) {
     try {
       return {
-        data: await this.jobRepository.findOneBy({jobName}),
+        data: await this.jobRepository.findOne(
+          {
+            where: {jobName}, 
+            relations: ['idProfessional', 'idCategory']
+          }
+        ),
         success: true
       } 
     } catch (e) {
@@ -78,7 +83,8 @@ export class JobsService {
         data: await this.jobRepository.find({
           where: { 
             idCategory: category
-          }
+          },
+          relations: ['idProfessional', 'idCategory']
         }),
         message: 'Servicios encontrados',
         success: true

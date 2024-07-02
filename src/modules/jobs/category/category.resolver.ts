@@ -1,6 +1,8 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { CategoryService } from "./category.service";
 import { CreateCategoryInput } from "../dto/create-category-input";
+import { JwtAuthGuard } from "src/modules/users/guard/auth.guard";
+import { UseGuards } from "@nestjs/common";
 
 @Resolver('category')
 export class CategoryResolver {
@@ -8,6 +10,7 @@ export class CategoryResolver {
         private categoryService:CategoryService
     ) {}
 
+    @UseGuards(JwtAuthGuard)
     @Query('categories')
     async  getCategories() {
         try {
@@ -17,6 +20,7 @@ export class CategoryResolver {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Query('categoryById')
     async getById(@Args('id') id:number){
         try {
@@ -26,6 +30,7 @@ export class CategoryResolver {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Query('categoryByName')
     async getByName(@Args('name') name: string){
         try {
@@ -35,6 +40,7 @@ export class CategoryResolver {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Mutation('createCategory')
     async createCategory(
         @Args('createCategoryInput') createCategoryInput:CreateCategoryInput

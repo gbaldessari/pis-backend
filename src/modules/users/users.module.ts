@@ -7,7 +7,6 @@ import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { EmailService } from "src/modules/users/email/email.module";
 import { JwtStrategy } from "./jwt/jwt.strategy";
-import { MeetsModule } from "../meets/meets.module";
 
 @Module({
   imports: [

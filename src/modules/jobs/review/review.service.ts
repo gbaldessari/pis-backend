@@ -7,7 +7,6 @@ import { Job } from '../entities/job.entity';
 import { CreateReviewInput } from '../dto/create-review-input';
 import { User } from 'src/graphql';
 import { UserService } from 'src/modules/users/users.service';
-import { copyFileSync } from 'fs';
 
 @Injectable()
 export class ReviewService {
@@ -21,7 +20,9 @@ export class ReviewService {
 
     async getReviews() {
         try {
-            return await this.reviewRepository.find();
+            return await this.reviewRepository.find(
+                {relations: ["job", "user"]}
+            );
         } catch(e) {
             return null;
         }
@@ -30,7 +31,10 @@ export class ReviewService {
     async getById(id: number) {
         try {
             return {
-                data: await this.reviewRepository.findOneBy({id}),
+                data: await this.reviewRepository.findOne({
+                    where: {id}, 
+                    relations: ["job", "user"]
+                }),
                 message: 'Review encontrada',
                 success: true
             }
