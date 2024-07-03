@@ -4,8 +4,9 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, Connection } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { hash } from 'bcrypt';
-import { UserService } from 'src/modules/users/users.service';
-import { User } from 'src/modules/users/entities/user.entity';
+import { UserService } from '../../src/modules/users/users.service';
+import { User } from '../../src/modules/users/entities/user.entity';
+import { EmailService } from '../../src/modules/users/email/email.service';
 
 // Mock del UserRepository
 class MockUserRepository extends Repository<User> { }
@@ -15,6 +16,7 @@ describe('UserService', () => {
     let userRepository: MockUserRepository;
     let connection: Connection;
     let jwtService: JwtService;
+    let emailService: EmailService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -36,6 +38,14 @@ describe('UserService', () => {
                         sign: jest.fn(),
                     },
                 },
+                {
+                    provide: EmailService, // Asegúrate de que este es el token correcto para EmailService
+                    useValue: {
+                        // Aquí mockeas los métodos de EmailService que UserService utiliza
+                        sendUserRecovery: jest.fn(),
+                        // Añade más métodos según sea necesario
+                    },
+                },
             ],
         }).compile();
 
@@ -43,6 +53,7 @@ describe('UserService', () => {
         userRepository = module.get<MockUserRepository>(getRepositoryToken(User));
         connection = module.get<Connection>(Connection);
         jwtService = module.get<JwtService>(JwtService);
+        emailService = module.get<EmailService>(EmailService);
     });
 
     afterEach(() => {
@@ -124,8 +135,8 @@ describe('UserService', () => {
 
             expect(result.success).toBeTruthy();
             expect(result.message).toBe('Sesión iniciada');
-            expect(result.data.token).toBe(mockToken);
-            expect(result.data.email).toBe(mockUser.email);
+            expect(result.data?.token).toBe(mockToken);
+            expect(result.data?.email).toBe(mockUser.email);
         });
 
         it('should return error if user not found', async () => {
