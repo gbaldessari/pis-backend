@@ -122,6 +122,10 @@ export class ReviewService {
             },
         );
 
+        const averageRate: number = await this.jobService.getAverageRate(job);
+
+        await this.jobService.updateJob(job.id, job.jobName, {averageRate: averageRate})
+
         return {
             data: review,
             message: 'Review creada',

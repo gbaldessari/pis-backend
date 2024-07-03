@@ -6,7 +6,7 @@ import {
     OnGatewayDisconnect, 
     SubscribeMessage
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { Socket, Server } from 'socket.io';
 import { SocketService } from './socket.service';
 
 @WebSocketGateway(81, {
@@ -21,14 +21,15 @@ export class SocketGateway implements
   constructor(private readonly socketService: SocketService) {}
 
   @WebSocketServer()
-  private server: Socket;
+  private server: Server;
 
   afterInit(server: any) {
     console.log('Iniciando Socket.io')
   }
 
-  handleConnection(socket: Socket): void {
-    this.socketService.handleConnection(socket);
+  handleConnection(client: Socket): void {
+    console.log(`Alguien se ha conectado: ${client}`)
+    this.socketService.handleConnection(client);
   }
 
   handleDisconnect(client: any) {

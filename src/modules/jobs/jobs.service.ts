@@ -23,8 +23,7 @@ export class JobsService {
     try {
       return await this.jobRepository.find({
         order: {requestsCount: 'DESC'},
-        relations: ['idProfessional', 'idCategory'],
-        take: 10
+        relations: ['idProfessional', 'idCategory']
       });
     } catch (e) {
       return null;
@@ -267,6 +266,19 @@ export class JobsService {
       message: 'Reseñas encontradas',
       success: true
     }
+  }
+
+  async getAverageRate(job: Job){
+    const jobWithReviews = await this.jobRepository.findOne({
+      where: {id: job.id}, 
+      relations: ['reviews']
+    });
+    if(!jobWithReviews.reviews) return 0;
+    let sum = 0;
+    jobWithReviews.reviews.forEach(review => {
+      sum += review.rate;
+    });
+    return Math.round(sum / jobWithReviews.reviews.length);;
   }
 
 }

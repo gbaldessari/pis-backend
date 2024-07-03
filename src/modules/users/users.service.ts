@@ -227,11 +227,11 @@ export class UserService {
   async requestResetPassword(email: string) {
     try {
       const findUser: User = (await this.getUserByEmail(email)).data;
-      if (!findUser) return {
+      if (!findUser) {console.log(false); return {
         data: null,
         message: 'Usuario no encontrado',
         success: false,
-      }
+      }}
 
       const resetToken = randomBytes(20).toString('hex')
       findUser.resetPasswordToken = resetToken;
@@ -239,7 +239,7 @@ export class UserService {
 
       this.userRepository.save(findUser);
       this.mailService.sendUserRecovery(findUser);
-      
+
       return {
         data: findUser.email,
         message: 'Se ha enviado un codigo a tu correo',

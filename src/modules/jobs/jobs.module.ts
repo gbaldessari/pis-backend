@@ -11,7 +11,7 @@ import { Category } from './entities/category.entity';
   imports: [
     TypeOrmModule.forFeature([Job, Category]),
     UsersModule,
-    CategoryModule
+    CategoryModule,
   ],
   providers: [JobsResolver, JobsService],
   exports: [JobsService]

@@ -184,8 +184,11 @@ export class MeetsService {
 
     const meetRet = await this.meetRepository.save(meetUpdated);
     const newRequestCount = meet.idJob.requestsCount + 1;
+
+    const averageRate: number = await this.jobSrevice.getAverageRate(meet.idJob);
     const updateInput: UpdateJobInput = {
-      requestsCount: newRequestCount
+      requestsCount: newRequestCount,
+      averageRate: averageRate
     }
 
     await this.jobSrevice.updateJob(

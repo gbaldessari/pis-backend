@@ -15,6 +15,9 @@ export class UpdateJobInput{
   @Field({nullable: true, description: 'Requests count of the job'})
   requestsCount?: number;
 
+  @Field({nullable: true, description: 'Average rate of the job'})
+  averageRate?: number;
+
   @Field({nullable: true, description: 'Price of the job'})
   price?: number;
 }
