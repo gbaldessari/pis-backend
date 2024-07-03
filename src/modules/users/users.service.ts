@@ -90,6 +90,39 @@ export class UserService {
     };
   }
 
+  async getProfessionalMeets(id: number) {
+    const user: User = await this.userRepository.
+    findOne({
+      where: {id}, 
+      relations: [
+        'professionalMeets',
+        'professionalMeets.idProfessional',
+        'professionalMeets.idJob',
+        'professionalMeets.idUser',
+        'professionalMeets.idJob.idCategory',
+        'professionalMeets.idJob.idProfessional',
+      ]
+    });
+
+    if (!user) return {
+      data: null,
+      message: 'Usuario no encontrado',
+      success: false
+    };
+
+    if(!user.isProfessional) return {
+      data: null,
+      message: 'Usuario no es un profesional',
+      success: false
+    }
+
+    return {
+      data: user.professionalMeets,
+      message: 'Citas encontradas',
+      success: true
+    };
+  }
+
   async login(loginInput: LoginInput) {
     try {
       const { email, password } = loginInput;

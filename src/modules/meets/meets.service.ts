@@ -26,7 +26,13 @@ export class MeetsService {
         data: await this.meetRepository.
           findOne({
             where: {id},
-            relations: ['idProfessional', 'idUser']
+            relations: [
+              'idProfessional', 
+              'idUser',
+              'idJob',
+              'idJob.idProfessional',
+              'idJob.idCategory'
+            ]
           }),
         success: true
       }
@@ -40,6 +46,11 @@ export class MeetsService {
 
   async createMeet(id: number, createMeetInput: CreateMeetInput) {
     const { startTime } = createMeetInput;
+    if(!startTime) return {
+      data: null,
+      message: 'Hora de inicio no definida',
+      success: false
+    }
     const fullStartTime = startTime+":00";
 
     const job: Job = (
@@ -156,10 +167,13 @@ export class MeetsService {
       success: false
     }
 
-    if(!(await this.userService.getUserById(idProfessional)).data.isProfessional) 
+    const professional: User = (await this.userService.
+      getUserById(idProfessional)).data;
+
+    if(!professional.isProfessional) 
     return {
       data: null,
-      message: 'Usuario no es un profesional',
+      message: 'Debes ser profesional para finalizar la cita',
       success: false
     }
 
@@ -187,9 +201,17 @@ export class MeetsService {
 
   async getMeets() {
     try {
-      return await this.meetRepository.find();
+      return await this.meetRepository.find(
+        {relations: [
+          'idProfessional', 
+          'idUser',
+          'idJob', 
+          'idJob.idProfessional', 
+          'idJob.idCategory'
+        ]}
+      );
     } catch (e) {
-      return null;
+      return [];
     }
   }
 

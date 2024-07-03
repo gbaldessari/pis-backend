@@ -9,37 +9,12 @@ type Meet {
   isDone: Boolean!
 }
 
-type Job {
-  id: Int!
-  jobName: String!
-  description: String!
-  averageRate: Int!
-  idCategory: Category!
-  idProfessional: User!
-  requestsCount: Int!
-}
-
-type Category {
-  id: Int!
-  categoryName: String!
-}
-
-type User {
-  id: Int!
-  username: String!
-  email: String!
-  password: String!	
-  phone: Int!
-  address: String!
-  isProfessional: Boolean
-}
-
 type QueryMeetReturn {
   data: Meet
   success: Boolean!
 }
 
-type RemoveMeetReturn {
+type MessageReturn {
   message: String!
   success: Boolean!
 }
@@ -65,5 +40,5 @@ type Query {
 type Mutation {
   createMeet(createMeetInput: CreateMeetInput!): DefaultMeetReturn!
   finishMeet(idMeet: Int!): DefaultMeetReturn!
-  removeMeet(id: Int!): RemoveMeetReturn!
+  removeMeet(id: Int!): MessageReturn!
 }

@@ -99,16 +99,6 @@ export interface Review {
     user: User;
 }
 
-export interface User {
-    id: number;
-    username: string;
-    email: string;
-    password: string;
-    phone: number;
-    address: string;
-    isProfessional?: Nullable<boolean>;
-}
-
 export interface Category {
     id: number;
     categoryName: string;
@@ -124,42 +114,8 @@ export interface QueryCategoryReturn {
     success: boolean;
 }
 
-export interface QueryByCategoryReturn {
-    data?: Nullable<Nullable<Job>[]>;
-    message: string;
-    success: boolean;
-}
-
-export interface ExistReviewReturn {
-    message: string;
-    success: boolean;
-}
-
-export interface DefaultReturn {
-    data?: Nullable<string>;
-    message: string;
-    success: boolean;
-}
-
 export interface DefaultReviewReturn {
     data?: Nullable<Review>;
-    message: string;
-    success: boolean;
-}
-
-export interface DefaultCategoryReturn {
-    data?: Nullable<string>;
-    message: string;
-    success: boolean;
-}
-
-export interface RemoveReturn {
-    message: string;
-    success: boolean;
-}
-
-export interface QueryReviewJob {
-    data?: Nullable<Nullable<Review>[]>;
     message: string;
     success: boolean;
 }
@@ -167,15 +123,15 @@ export interface QueryReviewJob {
 export interface IQuery {
     jobs(): Nullable<Nullable<Job>[]> | Promise<Nullable<Nullable<Job>[]>>;
     jobByName(name: string): QueryReturnJob | Promise<QueryReturnJob>;
-    jobByCategory(category: string): QueryByCategoryReturn | Promise<QueryByCategoryReturn>;
+    jobByCategory(category: string): ReturnJobs | Promise<ReturnJobs>;
     jobById(id: number): QueryReturnJob | Promise<QueryReturnJob>;
     categories(): Nullable<Nullable<Category>[]> | Promise<Nullable<Nullable<Category>[]>>;
-    categoryById(id: number): QueryCategoryReturn | Promise<QueryCategoryReturn>;
-    categoryByName(name: string): QueryCategoryReturn | Promise<QueryCategoryReturn>;
-    existReview(idJob: number): ExistReviewReturn | Promise<ExistReviewReturn>;
+    categoryById(id: number): ReturnJobs | Promise<ReturnJobs>;
+    categoryByName(name: string): ReturnJobs | Promise<ReturnJobs>;
+    existReview(idJob: number): MessageReturn | Promise<MessageReturn>;
     getReviewById(id: number): DefaultReviewReturn | Promise<DefaultReviewReturn>;
     reviews(): Nullable<Nullable<Review>[]> | Promise<Nullable<Nullable<Review>[]>>;
-    getReviewsByJob(id: number): QueryReviewJob | Promise<QueryReviewJob>;
+    getReviewsByJob(id: number): ReturnReviews | Promise<ReturnReviews>;
     meets(): Nullable<Nullable<Meet>[]> | Promise<Nullable<Nullable<Meet>[]>>;
     meet(id: number): QueryMeetReturn | Promise<QueryMeetReturn>;
     users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
@@ -188,18 +144,19 @@ export interface IQuery {
     getUserReviews(): ReturnReviews | Promise<ReturnReviews>;
     getProfessionalJobs(): ReturnJobs | Promise<ReturnJobs>;
     getUserChats(): ReturnUsers | Promise<ReturnUsers>;
+    getProfessionalMeets(): ReturnMeets | Promise<ReturnMeets>;
 }
 
 export interface IMutation {
     createJob(createJobInput: CreateJobInput): DefaultReturn | Promise<DefaultReturn>;
     updateJob(jobName: string, updateJobInput: UpdateJobInput): DefaultReturn | Promise<DefaultReturn>;
-    removeJob(id: number): RemoveReturn | Promise<RemoveReturn>;
-    createCategory(createCategoryInput: CreateCategoryinput): DefaultCategoryReturn | Promise<DefaultCategoryReturn>;
+    removeJob(id: number): MessageReturn | Promise<MessageReturn>;
+    createCategory(createCategoryInput: CreateCategoryinput): DefaultReturn | Promise<DefaultReturn>;
     createReview(createReviewInput: CreateReviewInput): DefaultReviewReturn | Promise<DefaultReviewReturn>;
-    removeReview(id: number): RemoveReturn | Promise<RemoveReturn>;
+    removeReview(id: number): MessageReturn | Promise<MessageReturn>;
     createMeet(createMeetInput: CreateMeetInput): DefaultMeetReturn | Promise<DefaultMeetReturn>;
     finishMeet(idMeet: number): DefaultMeetReturn | Promise<DefaultMeetReturn>;
-    removeMeet(id: number): RemoveMeetReturn | Promise<RemoveMeetReturn>;
+    removeMeet(id: number): MessageReturn | Promise<MessageReturn>;
     register(registerInput: RegisterInput): DefaultReturn | Promise<DefaultReturn>;
     login(loginInput: LoginInput): LoginReturn | Promise<LoginReturn>;
     editUser(editUserInput: EditUserInput): DefaultReturn | Promise<DefaultReturn>;
@@ -224,13 +181,29 @@ export interface QueryMeetReturn {
     success: boolean;
 }
 
-export interface RemoveMeetReturn {
+export interface MessageReturn {
     message: string;
     success: boolean;
 }
 
 export interface DefaultMeetReturn {
     data?: Nullable<Meet>;
+    message: string;
+    success: boolean;
+}
+
+export interface User {
+    id: number;
+    username: string;
+    email: string;
+    password: string;
+    phone: number;
+    address: string;
+    isProfessional?: Nullable<boolean>;
+}
+
+export interface DefaultReturn {
+    data?: Nullable<string>;
     message: string;
     success: boolean;
 }

@@ -206,7 +206,7 @@ export class JobsService {
       message: 'Profesional no registrado',
       success: false
     }
-    if(existCategory && existName && existCategory) return {
+    if(existCategory === existName) return {
       data: null,
       message: 'Ya existe un servicio con este nombre en la categoría: '+
       category.categoryName,

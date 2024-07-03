@@ -8,29 +8,6 @@ type User {
   isProfessional: Boolean
 }
 
-type Job {
-  id: Int!
-  jobName: String!
-  description: String!
-  averageRate: Int!
-  idCategory: Category!
-  idProfessional: User!
-  requestsCount: Int!
-}
-
-type Review {
-  id: Int!
-  comment: String!
-  rate: Int!
-  job: Job!
-  user: User!
-}
-
-type Category {
-  id: Int!
-  categoryName: String!
-}
-
 type DefaultReturn {
   data: String
   message: String!
@@ -152,6 +129,7 @@ type Query {
   getUserReviews: ReturnReviews!
   getProfessionalJobs: ReturnJobs!
   getUserChats: ReturnUsers!
+  getProfessionalMeets: ReturnMeets!
 }
 
 type Mutation {
