@@ -75,7 +75,6 @@ type Query {
   getReviewById(id: Int!): DefaultReviewReturn!
   reviews: [Review]
   getReviewsByJob(id: Int!): ReturnReviews!
-  getMostRequestedJobs: ReturnJobs!
 }
 
 type Mutation {

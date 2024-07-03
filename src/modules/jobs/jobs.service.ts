@@ -22,10 +22,9 @@ export class JobsService {
   async getJobs() {
     try {
       return await this.jobRepository.find({
-        relations: [
-          "idProfessional", 
-          "idCategory"
-        ]
+        order: {requestsCount: 'DESC'},
+        relations: ['idProfessional', 'idCategory'],
+        take: 10
       });
     } catch (e) {
       return null;
@@ -266,26 +265,6 @@ export class JobsService {
     return {
       data: job.reviews,
       message: 'Reseñas encontradas',
-      success: true
-    }
-  }
-
-  async mostRequestedJobs() {
-    const mostRequestedJobs: Job[] = await this.jobRepository.find({
-      order: {requestsCount: 'DESC'},
-      relations: ['idProfessional', 'idCategory'],
-      take: 10
-    });
-
-    if (!mostRequestedJobs) return {
-      data: [],
-      message: 'No hay servicios',
-      success: false
-    }
-
-    return {
-      data: mostRequestedJobs,
-      message: 'Servicios mas solicitados',
       success: true
     }
   }
