@@ -62,6 +62,16 @@ export class JobsResolver {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Query('getMostRequestedJobs')
+  async getMostRequestedJobs() {
+    try {
+      return await this.jobsService.mostRequestedJobs();
+    } catch (e) {
+      throw new Error("INTERNAL_SERVER_ERROR" + e);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Mutation('createJob')
   async createJob(
     @Context() context: any,

@@ -270,4 +270,23 @@ export class JobsService {
     }
   }
 
+  async mostRequestedJobs() {
+    const mostRequestedJobs: Job[] = await this.jobRepository.find({
+      order: {requestsCount: 'DESC'},
+      relations: ['idProfessional', 'idCategory']
+    });
+
+    if (!mostRequestedJobs) return {
+      data: [],
+      message: 'No hay servicios',
+      success: false
+    }
+
+    return {
+      data: mostRequestedJobs,
+      message: 'Servicios mas solicitados',
+      success: true
+    }
+  }
+
 }
