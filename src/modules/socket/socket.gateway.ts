@@ -24,7 +24,7 @@ export class SocketGateway implements
   private server: Socket;
 
   afterInit(server: any) {
-    console.log('Esto se ejecuta cuando inicia socket.io xd')
+    console.log('Iniciando Socket.io')
   }
 
   handleConnection(socket: Socket): void {

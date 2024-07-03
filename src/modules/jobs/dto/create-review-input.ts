@@ -3,12 +3,12 @@ import { Field, InputType } from "@nestjs/graphql";
 @InputType()
 export class CreateReviewInput {
 
-    @Field()
+    @Field({nullable: false, description: 'Comment of the review'})
     comment: string;
 
-    @Field()
+    @Field({nullable: false, description: 'Rate of the review'})
     rate: number;
 
-    @Field()
+    @Field({nullable: false, description: 'Id of the job'})
     idJob: number;
 }

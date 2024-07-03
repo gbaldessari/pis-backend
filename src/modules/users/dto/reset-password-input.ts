@@ -5,12 +5,21 @@ import { IsEmail } from "class-validator";
 export class ResetPasswordInput {
 
     @IsEmail()
-    @Field()
+    @Field({
+        nullable: false,
+        description: 'Email of the user'
+    })
     email: string;
 
-    @Field()
+    @Field({
+        nullable: false,
+        description: 'Reset password token'
+    })
     resetPasswordToken: string;
     
-    @Field()
+    @Field({
+        nullable: false,
+        description: 'Password of the user'
+    })
     password: string;
 }
