@@ -62,6 +62,17 @@ export class UserResolver {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Query('getProfessionalMeets')
+    async getProfessionalMeets(@Context() context: any){
+        try {
+            const id: number = context.req.user.id;
+            return await this.userService.getProfessionalMeets(id);
+        } catch (e) {
+            throw new Error("INTERNAL_SERVER_ERROR" + e);
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Query('totalSalesGenerated')
     async getTotalSalesGenerated(@Context() context: any){
         try {
@@ -75,8 +86,8 @@ export class UserResolver {
     @UseGuards(JwtAuthGuard)
     @Query('totalSalesMonth')
     async getTotalSalesMonth(@Context() context: any){
-        const id: number = context.req.user.id;
         try {
+            const id: number = context.req.user.id;
             return await this.userService.getTotalSalesMonth(id);
         } catch (e) {
             throw new Error("INTERNAL_SERVER_ERROR" + e);

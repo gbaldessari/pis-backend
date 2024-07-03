@@ -17,15 +17,6 @@ type Review {
   user: User!
 }
 
-type User {
-  id: Int!
-  username: String!
-  email: String!
-  password: String!	
-  phone: Int!
-  address: String!
-}
-
 type Category {
   id: Int!
   categoryName: String!
@@ -41,43 +32,8 @@ type QueryCategoryReturn {
   success: Boolean!
 }
 
-type QueryByCategoryReturn {
-  data: [Job]
-  message: String!
-  success: Boolean!
-}
-
-type ExistReviewReturn {
-  message: String!
-  success: Boolean!
-}
-
-type DefaultReturn {
-  data: String
-  message: String!
-  success: Boolean!
-}
-
 type DefaultReviewReturn {
   data: Review
-  message: String!
-  success: Boolean!
-}
-
-type DefaultCategoryReturn {
-  data: String
-  message: String!
-  success: Boolean!
-
-}
-
-type RemoveReturn {
-  message: String!
-  success: Boolean!
-}
-
-type QueryReviewJob {
-  data: [Review]
   message: String!
   success: Boolean!
 }
@@ -110,22 +66,22 @@ input CreateReviewInput {
 type Query {
   jobs: [Job]
   jobByName(name: String!): QueryReturnJob!
-  jobByCategory(category: String!): QueryByCategoryReturn!
+  jobByCategory(category: String!): ReturnJobs!
   jobById(id: Int!): QueryReturnJob!
   categories: [Category]
-  categoryById(id: Int!): QueryCategoryReturn!
-  categoryByName(name: String!): QueryCategoryReturn!
-  existReview(idJob: Int!): ExistReviewReturn!
+  categoryById(id: Int!): ReturnJobs!
+  categoryByName(name: String!): ReturnJobs!
+  existReview(idJob: Int!): MessageReturn!
   getReviewById(id: Int!): DefaultReviewReturn!
   reviews: [Review]
-  getReviewsByJob(id: Int!): QueryReviewJob!
+  getReviewsByJob(id: Int!): ReturnReviews!
 }
 
 type Mutation {
   createJob(createJobInput: CreateJobInput!): DefaultReturn!
   updateJob(jobName: String!, updateJobInput: UpdateJobInput!): DefaultReturn!
-  removeJob(id: Int!): RemoveReturn!
-  createCategory(createCategoryInput: CreateCategoryinput!): DefaultCategoryReturn!
+  removeJob(id: Int!): MessageReturn!
+  createCategory(createCategoryInput: CreateCategoryinput!): DefaultReturn!
   createReview(createReviewInput: CreateReviewInput!): DefaultReviewReturn!
-  removeReview(id: Int!): RemoveReturn!
+  removeReview(id: Int!): MessageReturn!
 }

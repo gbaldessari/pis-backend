@@ -58,16 +58,15 @@ export class ReviewService {
 
         const existReview = await this.reviewRepository.findOneBy({job, user});
 
-        if(existReview) {
-            return {
-                message: 'Review encontrada',
-                success: true
-            }
-        } else {        
+        if(!existReview) {
             return {
                 message: 'Review no existe',
                 success: false
             }
+        }      
+        return {
+            message: 'Review encontrada',
+            success: true
         }
     }
 
